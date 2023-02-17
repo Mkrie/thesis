@@ -1,4 +1,3 @@
-import shutil
 import csv
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -35,15 +34,17 @@ class PrepareProfile:
                     break
 
         path_to_clean_profile = Path(path_to_profiles, "clean")
-        if path_to_clean_profile.is_dir():
-            shutil.rmtree(str(path_to_clean_profile), ignore_errors=True)
-        path_to_clean_profile.mkdir()
+        if not path_to_clean_profile.is_dir():
+            path_to_clean_profile.mkdir()
+
+        if Path(path_to_clean_profile, profile_name).is_file():
+            Path(path_to_clean_profile, profile_name).unlink()
         image.save(Path(path_to_clean_profile, profile_name))
 
         path_to_csv_profile = Path(path_to_profiles, "csv")
-        if path_to_csv_profile.is_dir():
-            shutil.rmtree(str(path_to_csv_profile), ignore_errors=True)
-        path_to_csv_profile.mkdir()
+        if not path_to_csv_profile.is_dir():
+            path_to_csv_profile.mkdir()
+
         with open(Path(path_to_csv_profile, profile_name.replace("png", "csv")), "w") as csv_file:
             writer = csv.writer(csv_file)
             writer.writerows(list_coords)
@@ -53,6 +54,6 @@ class PrepareProfile:
 
 if __name__ == "__main__":
     profile_1 = PrepareProfile("profiles_1")
-    list_coords: list[tuple[float]] = profile_1.cleaning("profile_06_42.png")
+    list_coords: list[tuple[float]] = profile_1.cleaning("profile_18_04.png")
     plt.plot(tuple(x[0] for x in list_coords), tuple(x[1] for x in list_coords))
     plt.show()
