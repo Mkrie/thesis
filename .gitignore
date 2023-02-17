@@ -4,3 +4,4 @@
 *.synctex.gz
 *.loc
 thesis_env/
+.idea
