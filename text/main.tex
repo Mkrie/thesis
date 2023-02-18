@@ -83,25 +83,220 @@
 
 %\author{}
 \title{Измерительно-вычислительная система для оценки вертикального профиля двуокиси азота в атмосфере}
-\date{15.02.23}
+\date{18.02.23}
 
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
 \section{Введение}
-...
+in process
 \section{Основная часть}
+in process
 \subsection{DOAS}
+in process
 \subsection{Обратные задачи}
+Рассмотрим неизвестный сигнал 
+$f \in \mathcal{L}^2(\mathbb{R}^d)$ и предположим, 
+что последний проверяется каким-либо сенсорным устройством, 
+что приводит к вектору данных 
+$\textbf{y} = [y_1, \ldots, y_L]$ из $L$ измерения. 
+Восстановление $f$ из вектора данных $\textbf{y}$ 
+называется обратной задачей.
+\nl
+Следующие допущения являются стандартными:
+\begin{itemize}
+\item Чтобы учесть неточности датчиков предполагается, 
+что вектор данных $\textbf{u}$ это результат 
+случайного вектора 
+$\textbf{Y} = [Y_1, \ldots , Y_L] =
+\left[ 
+\langle f, \phi_1 \rangle,
+\ldots ,
+\langle f, \phi_L \rangle
+\right]$, 
+колеблющийся в соответствии с некоторым распределением шума. 
+Записи $\mathbb{E}[\textbf{Y}] = \widetilde{\textbf{y}}$ 
+называются идеальными измерениями(измерения, которые были бы получены в отсутствие шума).
+\item Измерения предполагаются несмещенными и линейными,
+т.е.
+$\mathbb{E}[\textbf{Y}] = \Phi^{*}f$, 
+для некоторых функционалов выборки 
+$\{ \phi_1, \ldots , \phi_L \} 
+\subset \mathcal{L}^2(\mathbb{R}^d)$ 
+моделирующих систему сбора данных.
+\end{itemize}
+\subsection{Некорректность обратных задач}
+Для решения обратной задачи можно аппроксимировать 
+среднее $\mathbb{E}[Y]$ по его одновыборочной эмпирической 
+оценке $\textbf{y}$ и решить линейную задачу:
+\begin{equation}
+\label{eq_1}
+\textbf{y} = \textbf{G} \alpha
+\end{equation}
+К сожалению, такие задачи в целом некорректны:
+\begin{itemize}
+\item \textbf{Решений может не быть}. 
+Если $\textbf{G}$ не сюръективен,
+$\mathcal{R}(\textbf{G}) \subseteq \mathbb{R}^L$. 
+Следовательно, зашумленный вектор данных $\textbf{y}$ 
+не гарантируется принадлежность к $\mathcal{R}(\mathbb{G})$.
+\item \textbf{Может существовать более одного решения}. 
+Если $L < N$ действительно (или, в более общем смысле, если 
+$\textbf{G}$ не инъективен), 
+$\mathcal{N}(\textbf{G}) \neq \{ \textbf{0} \}$. 
+Следовательно, если $\alpha^{*}$ является решением 
+\eqref{eq_1}, тогда $\alpha^{*} + \beta$ также является решением
+$\forall \beta \in \mathcal{N}(\textbf{G})$:
+\[
+\textbf{G}(\alpha^{*} + \beta) =
+\textbf{G} \alpha^{*} + \textbf{G} \beta =
+\textbf{G} \alpha^{*} = \textbf{y}
+\]
+\item \textbf{Решения могут быть численно неустойчивыми}.
+Если $\textbf{G}$ например, сюръективно, то
+$\textbf{G}^{\dagger} = 
+\textbf{G}^{T}(\textbf{G} \textbf{G}^{T})^{-1}$
+является правой инверсией $\textbf{G}$,
+а также 
+$\alpha^{*}(\textbf{y}) =
+\textbf{G}^{T}(\textbf{G} \textbf{G}^{T})^{-1}$
+является решением \eqref{eq_1}. 
+У нас есть тогда
+\[
+||\alpha^{*}(\textbf{y})|| \leq
+||\textbf{G}||_{2}
+||(\textbf{G}^{T} \textbf{G})^{-1}||_2
+||\textbf{y}||_2 =
+\underbrace{
+\dfrac{
+\sqrt{\lambda_{\text{max}}(\textbf{G}^{T}\textbf{G}})
+}{
+\lambda_{\text{min}}(\textbf{G}^{T}\textbf{G})
+}}_{\text{может быть очень большим}} 
+||\textbf{y}||_2, \qquad 
+\forall \textbf{y} \in \mathbb{R}^L.
+\]
+\end{itemize}
 \section{Постановка задачи}
-...
+В экспериментальных исследованиях результатом 
+измерения является конечный набор значений
+$\pmb{\xi} = (\xi_1, \ldots, \xi_N)$,
+где $\xi_i$ -- наклонное содержание
+$\text{NO}_2$ для зинитного угла направления
+визирования $z_i$.
+По набору этих значений требуется оценить значения вертикального
+распределения $\text{NO}_2$ $n(h)$ в заданном наборе точек
+области определения.
+\nl
+В задаче восстановления $\text{NO}_2$ результат измерения
+имеет вид:
+\begin{equation}
+\xi_i = 
+\int_{0}^{H}m(z_i, h)n(h)dh + \nu_i =
+\sum\limits_{j=1}^{M}m(z_i, h_j) n(h_j) \triangle h
++ \nu_i = (a_i, n) + \nu_i
+\end{equation}
+где $a_i$ -- послойная воздушная масса,
+которая рассчитывается из модели переноса излучения.
+Она связывает наклонное содержание
+$\text{NO}_2$ $\pmb{\xi}$
+с вертикальным распределением концентраций $n(h)$.
+\nl
+Схему измерений можно представить в виде:
+\begin{equation}
+\pmb\xi = A \pmb{n} + \pmb{\nu}
+\end{equation}
+На основании измерения вектора
+$\pmb\xi = (\xi_1, \ldots, \xi_N)$
+требуется оценить значение вектора
+$Un \in \mathbb{R}^N$, 
+где $U: \mathbb{R}^N \rightarrow \mathbb{R}^N$ --
+оператор, которому сопоставляется матрица с учётом 
+априорной информации о значениях координат вектора 
+$\pmb{n} = (n_1, \ldots, n_M)$.
+\begin{description}
+\item[1)]
+Координаты вектора $\pmb n$ неотрицательны:
+$n_i > 0, i=1, \ldots, M.$
+\item[2)]
+Восстановленный профиль $\pmb n$ является унимодальным:
+\begin{equation}
+\begin{cases}
+n_i \leq n_{i+1}, \quad i \leq k \\
+n_{i+1} \leq n_i, \quad i \geq k
+\end{cases}, \qquad
+1 \leq k \leq M, \qquad
+i = 1, \ldots, M-1.
+\end{equation}
+\end{description}
 \section{Предложенный метод}
-...
+Решение будем искать как решение задачи на минимакс,
+тогда:
+\begin{equation}
+\min_{\pmb n} \max_{i = 1, \ldots, M}
+\left| \xi_i - (a_i, \pmb f)\right|
+\end{equation}
+С учетом априорной информации:
+\begin{equation}
+\min_{\pmb f, k} \max_{i = 1, \ldots, M}
+\left|
+\xi_i - (a_i, \pmb f)
+\right|
+\end{equation}
+Данную задачу можно представить как задачу линейного программирования:
+\[
+(c, d) \sim \min
+\]
+\[
+c = (1, 0, \ldots, 0), \qquad
+d = (z, n_1, \ldots, n_M), \qquad
+1 \leq k \leq M
+\]
+\[
+\begin{cases}
+n_1-n_2 \leq 0 \\
+n_2-n_3 \leq 0 \\
+\qquad \ldots \\
+n_{k-1} - n_k \leq 0
+\end{cases}
+\quad 
+\begin{cases}
+n_N-n_{N-1} \leq 0 \\
+n_{N-1}-n_{N-2} \leq 0 \\
+\qquad \ldots \\
+n_{k+1} - n_{k} \leq 0
+\end{cases}
+\quad
+\begin{cases}
+-n_1 \leq 0 \\
+-n_2 \leq 0 \\
+\quad \ldots \\
+-n_N \leq 0
+\end{cases}
+\]
+\[
+\begin{cases}
+z_1 \geq
+\left|
+\sum_{j=1}^N a_{1j}f_j - \xi_1
+\right| \\
+z_2 \geq
+\left|
+\sum_{j=1}^N a_{2j}f_j - \xi_2
+\right| \\
+\qquad \ldots \\
+z_n \geq
+\left|
+\sum_{j=1}^N a_{nj}f_j - \xi_n
+\right|
+\end{cases}
+\]
+
 \section{Эксперименты}
-...
+in process
 \section{Заключение}
-...
+in process
 
 \newpage
 \addcontentsline{toc}{section}{Список используемой литературы}

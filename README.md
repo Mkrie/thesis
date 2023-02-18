@@ -7,3 +7,5 @@
 * [Перевод весовых функций в csv](scripts/msbgraph_to_csv.py)
 * [Перевод профилей в csv](scripts/prepare_profile.py)
 * [Прямые измерения(наклонное содержание)](scripts/direct_measurements.py)
+##### text:
+* [Текст](text/main.pdf)

@@ -3,8 +3,9 @@
 \contentsline {section}{\numberline {2}Основная часть}{2}{section.2}%
 \contentsline {subsection}{\numberline {2.1}DOAS}{2}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Обратные задачи}{2}{subsection.2.2}%
-\contentsline {section}{\numberline {3}Постановка задачи}{2}{section.3}%
-\contentsline {section}{\numberline {4}Предложенный метод}{2}{section.4}%
-\contentsline {section}{\numberline {5}Эксперименты}{2}{section.5}%
-\contentsline {section}{\numberline {6}Заключение}{2}{section.6}%
-\contentsline {section}{Список используемой литературы}{3}{section.6}%
+\contentsline {subsection}{\numberline {2.3}Некорректность обратных задач}{2}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Постановка задачи}{3}{section.3}%
+\contentsline {section}{\numberline {4}Предложенный метод}{3}{section.4}%
+\contentsline {section}{\numberline {5}Эксперименты}{4}{section.5}%
+\contentsline {section}{\numberline {6}Заключение}{4}{section.6}%
+\contentsline {section}{Список используемой литературы}{5}{section.6}%
