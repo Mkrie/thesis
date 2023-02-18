@@ -6,10 +6,11 @@ from pathlib import Path
 @dataclass
 class DirectMeasurements:
     profile: str
+    dataset_name: str = "dataset_1_csv"
 
-    def integration(self, dataset: str):
+    def integration(self, dataset: str) -> float:
         """Calculate direct measurement via integration."""
-        path_to_dataset_csv = Path(Path(__file__).parents[1], "data", "dataset_1_csv")
+        path_to_dataset_csv = Path(Path(__file__).parents[1], "data", self.dataset_name)
 
         msb_tup: tuple[tuple[float]] = tuple()
         with open(Path(path_to_dataset_csv, dataset)) as csv_file:
@@ -24,9 +25,6 @@ class DirectMeasurements:
             prof_tup = tuple(
                 sorted(list(map(lambda x: (float(x[0]), float(x[1])), reader)), key=lambda y: y[0])
             )
-
-        # print(msb_tup)
-        # print(prof_tup)
 
         max_h_prof_tup: float = max([i[0] for i in prof_tup])
         sum_X: float = 0
@@ -44,7 +42,20 @@ class DirectMeasurements:
             )
         return sum_X
 
+    def direct_measurements_for_profile(self) -> list[tuple[float]]:
+        """Direct measurements for a specific profile."""
+        path_to_dataset_csv = Path(Path(__file__).parents[1], "data", self.dataset_name)
+        for_prof_calc: list[tuple[float]] = []
+        for txt_path in path_to_dataset_csv.glob("*.csv"):
+            for_prof_calc.append(
+                (
+                    txt_path.name.replace("msbgraf_", "").replace(".csv", "").replace("_", "."),
+                    self.integration(txt_path.name),
+                )
+            )
+        return sorted(for_prof_calc, key=lambda x: x[0])
+
 
 if __name__ == "__main__":
     dir_meas = DirectMeasurements("profile_06_42.csv")
-    print(dir_meas.integration("msbgraf_60.csv"))
+    print(dir_meas.direct_measurements_for_profile())
