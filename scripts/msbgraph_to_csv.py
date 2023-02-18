@@ -12,7 +12,7 @@ class Msbgraph:
     begin_f: int = 43
     end_f: int = 127
 
-    def convert_all_files_to_csv(self):
+    def convert_all_files_to_csv(self) -> None:
         """Convert all files in dataset to csv."""
         path_to_data = Path(Path(__file__).parents[1], "data")
         path_to_csv = Path(path_to_data, f"{self.dataset_name}_csv")
