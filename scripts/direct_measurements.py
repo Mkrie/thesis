@@ -17,13 +17,18 @@ class DirectMeasurements:
             reader = csv.reader(csv_file)
             msb_tup = tuple(map(lambda x: (float(x[0]) * 1000, float(x[1])), reader))
 
-        path_to_profile_csv = Path(Path(__file__).parents[1], "data", "profiles_1", "csv")
+        path_to_profile_csv = Path(
+            Path(__file__).parents[1], "data", "profiles_1", "csv"
+        )
 
         prof_tup: tuple[tuple[float]] = tuple()
         with open(Path(path_to_profile_csv, self.profile)) as csv_file:
             reader = csv.reader(csv_file)
             prof_tup = tuple(
-                sorted(list(map(lambda x: (float(x[0]), float(x[1])), reader)), key=lambda y: y[0])
+                sorted(
+                    list(map(lambda x: (float(x[0]), float(x[1])), reader)),
+                    key=lambda y: y[0],
+                )
             )
 
         max_h_prof_tup: float = max([i[0] for i in prof_tup])
@@ -49,7 +54,11 @@ class DirectMeasurements:
         for txt_path in path_to_dataset_csv.glob("*.csv"):
             for_prof_calc.append(
                 (
-                    txt_path.name.replace("msbgraf_", "").replace(".csv", "").replace("_", "."),
+                    float(
+                        txt_path.name.replace("msbgraf_", "")
+                        .replace(".csv", "")
+                        .replace("_", ".")
+                    ),
                     self.integration(txt_path.name),
                 )
             )
@@ -57,5 +66,5 @@ class DirectMeasurements:
 
 
 if __name__ == "__main__":
-    dir_meas = DirectMeasurements("profile_06_42.csv")
+    dir_meas = DirectMeasurements("profile_07_05.csv")
     print(dir_meas.direct_measurements_for_profile())

@@ -45,7 +45,9 @@ class PrepareProfile:
         if not path_to_csv_profile.is_dir():
             path_to_csv_profile.mkdir()
 
-        with open(Path(path_to_csv_profile, profile_name.replace("png", "csv")), "w") as csv_file:
+        with open(
+            Path(path_to_csv_profile, profile_name.replace("png", "csv")), "w"
+        ) as csv_file:
             writer = csv.writer(csv_file)
             writer.writerows(list_coords)
         del draw
