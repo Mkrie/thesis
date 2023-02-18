@@ -5,3 +5,4 @@
 *.loc
 thesis_env/
 .idea
+.ipynb_checkpoints
