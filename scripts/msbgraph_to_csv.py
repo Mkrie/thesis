@@ -9,7 +9,7 @@ class Msbgraph:
     """Converts data to csv."""
 
     dataset_name: str
-    begin_f: int = 43
+    begin_f: int = 42
     end_f: int = 127
 
     def convert_all_files_to_csv(self) -> None:
