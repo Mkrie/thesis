@@ -33,6 +33,7 @@ class DirectMeasurements:
 
         max_h_prof_tup: float = max([i[0] for i in prof_tup])
         sum_X: float = 0
+        # print(msb_tup)
         for i in range(len(msb_tup) - 1):
             if (msb_tup[i + 1][0] + msb_tup[i][0]) / 2 > max_h_prof_tup:
                 break
