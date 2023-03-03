@@ -16,7 +16,6 @@ class DirectMeasurements:
         with open(Path(path_to_dataset_csv, dataset)) as csv_file:
             reader = csv.reader(csv_file)
             msb_tup = tuple(map(lambda x: (float(x[0]) * 1000, float(x[1])), reader))
-
         path_to_profile_csv = Path(
             Path(__file__).parents[1], "data", "profiles_1", "csv"
         )

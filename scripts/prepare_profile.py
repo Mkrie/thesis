@@ -28,7 +28,7 @@ class PrepareProfile:
                     draw.point((j, i), (255, 255, 255))
                 else:
                     draw.point((j, i), (0, 0, 0))
-                    list_coords.append((1000 - (i * 1000 / height), j * 30 / width))
+                    list_coords.append((1000 - (i * 1000 / height), 1868835.50459 * j * 30 / width))
                     for k in range(j + 1, width):
                         draw.point((k, i), (255, 255, 255))
                     break
@@ -57,5 +57,8 @@ class PrepareProfile:
 if __name__ == "__main__":
     profile_1 = PrepareProfile("profiles_1")
     list_coords: list[tuple[float]] = profile_1.cleaning("profile_18_04.png")
-    plt.plot(tuple(x[0] for x in list_coords), tuple(x[1] for x in list_coords))
-    plt.show()
+    for txt_path in Path(Path(__file__).parents[1], "data", "profiles_1").glob("*.png"):
+        if txt_path.name != "profiles.png":
+            list_coords: list[tuple[float]] = profile_1.cleaning(txt_path.name)
+    # plt.plot(tuple(x[0] for x in list_coords), tuple(x[1] for x in list_coords))
+    # plt.show()
