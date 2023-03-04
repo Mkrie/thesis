@@ -1,4 +1,5 @@
 import csv
+import numpy as np
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -6,6 +7,7 @@ from pathlib import Path
 @dataclass
 class DirectMeasurements:
     profile: str
+    sigma: float
     dataset_name: str = "dataset_1_csv"
 
     def integration(self, dataset: str) -> float:
@@ -45,7 +47,7 @@ class DirectMeasurements:
                 * prof_tup[j][1]
                 / 2
             )
-        return sum_X
+        return sum_X + self.sigma * 10**15 * np.random.randn(1)[0]
 
     def direct_measurements_for_profile(self) -> list[tuple[float]]:
         """Direct measurements for a specific profile."""
@@ -66,5 +68,5 @@ class DirectMeasurements:
 
 
 if __name__ == "__main__":
-    dir_meas = DirectMeasurements("profile_07_05.csv")
+    dir_meas = DirectMeasurements("profile_07_05.csv", 0.3)
     print(dir_meas.direct_measurements_for_profile())

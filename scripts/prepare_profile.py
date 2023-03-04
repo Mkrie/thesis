@@ -1,7 +1,7 @@
 import csv
-import matplotlib.pyplot as plt
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
+
 from PIL import Image, ImageDraw
 
 
@@ -29,7 +29,12 @@ class PrepareProfile:
                     draw.point((j, i), (255, 255, 255))
                 else:
                     draw.point((j, i), (0, 0, 0))
-                    list_coords.append((1000 - (i * 1000 / height), coef * 1868835.50459 * j * 30 / width))
+                    list_coords.append(
+                        (
+                            1000 - (i * 1000 / height),
+                            coef * 1868835.50459 * j * 30 / width,
+                        )
+                    )
                     for k in range(j + 1, width):
                         draw.point((k, i), (255, 255, 255))
                     break

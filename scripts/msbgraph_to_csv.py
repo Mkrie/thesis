@@ -1,7 +1,7 @@
-import shutil
 import csv
-from pathlib import Path
+import shutil
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass
