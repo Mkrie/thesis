@@ -14,7 +14,7 @@ class ProfileRec:
     dataset_name: str = "dataset_1_csv"
 
     def solution_at_certain_maximum(
-        self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, k
+        self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k
     ):
         """ "solution at a certain maximum"""
         restriction_1 = [
@@ -34,9 +34,9 @@ class ProfileRec:
             + list(xi)
             + [0] * (len(restriction_1) + len(restriction_2))
         )
-        return linprog(c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq)
+        return linprog(c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq, bounds=bnd)
 
-    def linear_programming(self, sigma:float):
+    def linear_programming(self, sigma: float):
         """Solving a linear programming problem."""
         dir_meas = DirectMeasurements(self.profile, sigma)
         dir_meas_obj = dir_meas.direct_measurements_for_profile()
@@ -44,10 +44,11 @@ class ProfileRec:
         n: int = len(xi)
         heights, matrix_a = self.make_data(n)
         obj: list[int] = [1, *[0] * n]
+        bnd = [(0, float("inf")) for _ in range(n + 1)]
         z_min: float = 10**50
-        opt_optimal = self.solution_at_certain_maximum(xi, n, matrix_a, obj, 0)
+        opt_optimal = self.solution_at_certain_maximum(xi, n, matrix_a, obj, bnd, 0)
         for k in range(1, n):
-            opt = self.solution_at_certain_maximum(xi, n, matrix_a, obj, k)
+            opt = self.solution_at_certain_maximum(xi, n, matrix_a, obj, bnd, k)
             if opt.success:
                 if tuple(opt.x)[0] < z_min:
                     opt_optimal = opt
