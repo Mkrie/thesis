@@ -9,5 +9,6 @@
 * [Перевод профилей в csv](scripts/prepare_profile.py)
 * [Прямые измерения(наклонное содержание)](scripts/direct_measurements.py)
 * [Восстановление профилей](scripts/profile_recovery.py)
+* [Построить графики при различных sigma](scripts/build_profiles.py)
 ##### text:
 * [Текст](text/main.pdf)
