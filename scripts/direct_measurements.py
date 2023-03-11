@@ -8,7 +8,8 @@ from pathlib import Path
 class DirectMeasurements:
     profile: str
     sigma: float
-    dataset_name: str = "dataset_2_csv"
+    dir_profiles_name = "profiles_2"
+    dataset_name: str = "dataset_1_csv"
 
     def integration(self, dataset: str) -> float:
         """Calculate direct measurement via integration."""
@@ -19,7 +20,7 @@ class DirectMeasurements:
             reader = csv.reader(csv_file)
             msb_tup = tuple(map(lambda x: (float(x[0]) * 1000, float(x[1])), reader))
         path_to_profile_csv = Path(
-            Path(__file__).parents[1], "data", "profiles_1", "csv"
+            Path(__file__).parents[1], "data", self.dir_profiles_name, "csv"
         )
 
         prof_tup: tuple[tuple[float]] = tuple()
@@ -68,5 +69,5 @@ class DirectMeasurements:
 
 
 if __name__ == "__main__":
-    dir_meas = DirectMeasurements("profile_06_42.csv", 0.3)
+    dir_meas = DirectMeasurements("unimod_one.csv", 0.3)
     print(dir_meas.direct_measurements_for_profile())

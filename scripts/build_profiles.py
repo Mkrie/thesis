@@ -25,7 +25,7 @@ dict_profile_time = {
 sigma = 0.3
 number_of_trials: int = 10
 path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_1", "csv")
-k: int = 1
+k: int = 10
 for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
     sp = plt.subplot(2, 2, k)
     prof_recovery = ProfileRec(txt_path.name)
@@ -65,6 +65,7 @@ for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
         plt.grid(which="minor", color="k", linestyle=":")
         plt.xlabel("h[m]")
         plt.ylabel(r"$n$ [$cm^{-3}$]")
+        plt.xlim(0, 1000)
         list_text = txt_path.name.replace(".csv", "").split("_")
         plt.title(
             f"{dict_profile_time.get(tuple(list_text[1:]))}: {list_text[1]}:{list_text[2]}"

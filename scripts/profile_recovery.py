@@ -11,12 +11,12 @@ from direct_measurements import DirectMeasurements
 @dataclass
 class ProfileRec:
     profile: str
-    dataset_name: str = "dataset_2_csv"
+    dataset_name: str = "dataset_1_csv"
 
     def solution_at_certain_maximum(
         self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k
     ):
-        """ "solution at a certain maximum"""
+        """solution at a certain maximum"""
         restriction_1 = [
             tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)
         ]
@@ -53,7 +53,7 @@ class ProfileRec:
                 if tuple(opt.x)[0] < z_min:
                     opt_optimal = opt
                     z_min = tuple(opt.x)[0]
-        return heights, [0.02 * n_i for n_i in list(opt_optimal.x)[1:]], z_min
+        return heights, [0.01 * n_i for n_i in list(opt_optimal.x)[1:]], z_min
 
     def make_data(self, n: int):
         path_to_dataset_csv = Path(Path(__file__).parents[1], "data", self.dataset_name)
@@ -72,21 +72,22 @@ class ProfileRec:
 
 
 if __name__ == "__main__":
-    prof_recovery = ProfileRec("profile_06_42.csv")
-    rec = prof_recovery.linear_programming(0.3)
+    profile_name = "unimod_three.csv"
+    prof_recovery = ProfileRec(profile_name)
+    rec = prof_recovery.linear_programming(0)
     plt.plot(rec[0], rec[1])
-    path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_1", "csv")
-    with open(Path(path_to_profiles, "profile_17_46.csv"), "r") as csv_file:
+    path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_2", "csv")
+    with open(Path(path_to_profiles, profile_name), "r") as csv_file:
         reader = csv.reader(csv_file)
         tup_coords: tuple[tuple[str]] = tuple(reader)
         plt.minorticks_on()
         plt.grid(which="major", color="k", linewidth=1)
         plt.grid(which="minor", color="k", linestyle=":")
-        plt.xlim(0, 1000)
+        # plt.xlim(0, 1000)
         # plt.ylim(0, 6*10**7)
         plt.xlabel("h[m]")
         plt.ylabel(r"$n$ [$m^{-3}$]")
-        plt.title("profile_17_46.csv")
+        # plt.title("profile_17_46.csv")
         # list_text = txt_path.name.replace(".csv", "").split("_")
         plt.plot(
             tuple(float(x[0]) for x in tup_coords),
