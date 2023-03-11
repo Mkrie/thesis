@@ -11,7 +11,7 @@ from direct_measurements import DirectMeasurements
 @dataclass
 class ProfileRec:
     profile: str
-    dataset_name: str = "dataset_1_csv"
+    dataset_name: str = "dataset_2_csv"
 
     def solution_at_certain_maximum(
         self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k
@@ -53,7 +53,7 @@ class ProfileRec:
                 if tuple(opt.x)[0] < z_min:
                     opt_optimal = opt
                     z_min = tuple(opt.x)[0]
-        return heights, [0.01 * n_i for n_i in list(opt_optimal.x)[1:]], z_min
+        return heights, [0.02 * n_i for n_i in list(opt_optimal.x)[1:]], z_min
 
     def make_data(self, n: int):
         path_to_dataset_csv = Path(Path(__file__).parents[1], "data", self.dataset_name)
@@ -72,8 +72,8 @@ class ProfileRec:
 
 
 if __name__ == "__main__":
-    prof_recovery = ProfileRec("profile_17_46.csv")
-    rec = prof_recovery.linear_programming()
+    prof_recovery = ProfileRec("profile_06_42.csv")
+    rec = prof_recovery.linear_programming(0.3)
     plt.plot(rec[0], rec[1])
     path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_1", "csv")
     with open(Path(path_to_profiles, "profile_17_46.csv"), "r") as csv_file:

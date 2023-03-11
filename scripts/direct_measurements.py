@@ -8,7 +8,7 @@ from pathlib import Path
 class DirectMeasurements:
     profile: str
     sigma: float
-    dataset_name: str = "dataset_1_csv"
+    dataset_name: str = "dataset_2_csv"
 
     def integration(self, dataset: str) -> float:
         """Calculate direct measurement via integration."""
@@ -68,5 +68,5 @@ class DirectMeasurements:
 
 
 if __name__ == "__main__":
-    dir_meas = DirectMeasurements("profile_07_05.csv", 0.3)
+    dir_meas = DirectMeasurements("profile_06_42.csv", 0.3)
     print(dir_meas.direct_measurements_for_profile())

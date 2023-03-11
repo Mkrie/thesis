@@ -23,7 +23,7 @@ dict_profile_time = {
 }
 
 sigma = 0.3
-number_of_trials: int = 100
+number_of_trials: int = 10
 path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_1", "csv")
 k: int = 1
 for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
@@ -63,8 +63,6 @@ for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
         plt.minorticks_on()
         plt.grid(which="major", color="k", linewidth=1)
         plt.grid(which="minor", color="k", linestyle=":")
-        plt.xlim(0, 1000)
-        # plt.ylim(0, 6*10**14)
         plt.xlabel("h[m]")
         plt.ylabel(r"$n$ [$cm^{-3}$]")
         list_text = txt_path.name.replace(".csv", "").split("_")
@@ -99,6 +97,5 @@ for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
     k += 1
     if k > 4:
         k = 1
-        # break
         plt.figure()
 plt.show()
