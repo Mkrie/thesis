@@ -1,6 +1,6 @@
 import csv
 from pathlib import Path
-from math import fabs
+from math import fabs, sqrt
 import matplotlib.pyplot as plt
 
 from profile_recovery import ProfileRec
@@ -22,11 +22,11 @@ dict_profile_time = {
     ("18", "04"): "PM011D",
 }
 
-sigma = 0.6
-number_of_trials: int = 33
+sigma = 0.3
+number_of_trials: int = 100
 path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_1", "csv")
 k: int = 1
-for txt_path in path_to_profiles.glob("*.csv"):
+for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
     sp = plt.subplot(2, 2, k)
     prof_recovery = ProfileRec(txt_path.name)
     rec = prof_recovery.linear_programming(sigma)
@@ -38,18 +38,21 @@ for txt_path in path_to_profiles.glob("*.csv"):
                 rec_min_max[i][0] = rec[1][i]
             if rec[1][i] > rec_min_max[i][1]:
                 rec_min_max[i][1] = rec[1][i]
-    plt.errorbar(rec[0], tuple(0.5 * (x[1] + x[0]) for x in rec_min_max),
-                 yerr=tuple(0.5 * (x[1] - x[0]) for x in rec_min_max),
-                 fmt="o",
-                 linestyle="None",
-                 ecolor='black',
-                 elinewidth=2,
-                 capsize=3,
-                 color="black")
+    plt.errorbar(
+        rec[0],
+        tuple(0.5 * (x[1] + x[0]) for x in rec_min_max),
+        yerr=tuple(0.5 * (x[1] - x[0]) for x in rec_min_max),
+        linestyle="None",
+        ecolor="black",
+        elinewidth=2.5,
+        capsize=4,
+        color="black",
+    )
     list_discrepancy = list()
     plt.errorbar(
         rec[0],
         rec[1],
+        fmt="-o",
         linewidth=4,
         color="red",
         label="restored",
@@ -61,9 +64,9 @@ for txt_path in path_to_profiles.glob("*.csv"):
         plt.grid(which="major", color="k", linewidth=1)
         plt.grid(which="minor", color="k", linestyle=":")
         plt.xlim(0, 1000)
-        #plt.ylim(0, 6*10**14)
+        # plt.ylim(0, 6*10**14)
         plt.xlabel("h[m]")
-        plt.ylabel(r"$n$ [$m^{-3}$]")
+        plt.ylabel(r"$n$ [$cm^{-3}$]")
         list_text = txt_path.name.replace(".csv", "").split("_")
         plt.title(
             f"{dict_profile_time.get(tuple(list_text[1:]))}: {list_text[1]}:{list_text[2]}"
@@ -75,7 +78,7 @@ for txt_path in path_to_profiles.glob("*.csv"):
             for orig_i, orig_h in enumerate(original_x):
                 if res_h >= orig_h:
                     list_discrepancy.append(
-                        (rec[0][res_i], fabs(rec[1][res_i] - original_y[orig_i]))
+                        (rec[0][res_i], sqrt((rec[1][res_i] - original_y[orig_i]) ** 2))
                     )
                     break
         plt.errorbar(
@@ -89,8 +92,8 @@ for txt_path in path_to_profiles.glob("*.csv"):
         tuple(x[1] for x in list_discrepancy),
         linewidth=2,
         linestyle="--",
-        label="modulo error",
-        color="purple"
+        label="error",
+        color="purple",
     )
     plt.legend()
     k += 1

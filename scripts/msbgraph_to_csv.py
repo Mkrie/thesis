@@ -10,7 +10,7 @@ class Msbgraph:
 
     dataset_name: str
     begin_f: int = 42
-    end_f: int = 127
+    end_f: int = 137
 
     def convert_all_files_to_csv(self) -> None:
         """Convert all files in dataset to csv."""
@@ -34,5 +34,5 @@ class Msbgraph:
 
 
 if __name__ == "__main__":
-    dataset_1 = Msbgraph("dataset_1")
+    dataset_1 = Msbgraph("dataset_2")
     dataset_1.convert_all_files_to_csv()

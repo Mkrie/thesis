@@ -94,18 +94,3 @@ if __name__ == "__main__":
             linewidth=3,
         )
     plt.show()
-    # var1 = [1, 2, 3, 4, 5, 6]
-    # var2 = [7, 13, 16, 18, 25, 19]
-    # var3 = [29, 25, 20, 25, 20, 18]
-    #
-    # # define grid of plots
-    # fig, axs = plt.subplots(nrows=3, ncols=2)
-    #
-    # # add title
-    # fig.suptitle('Plots Stacked Vertically')
-    #
-    # # add data to plots
-    # axs[0][0].plot(var1, var2)
-    # axs[1][0].plot(var1, var3)
-    # axs[2][0].plot(var2, var3)
-    # plt.show()
