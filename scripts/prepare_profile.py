@@ -11,7 +11,7 @@ class PrepareProfile:
 
     def cleaning(self, profile_name: str) -> list[tuple[float]]:
         """Noise removal and image output."""
-        coef: float = 6.02 / 46.005 * 10 ** (8)
+        coef: float = 2.46 * 10**10
         list_coords: list[tuple[float]] = []
         path_to_profiles = Path(Path(__file__).parents[1], "data", self.profiles_name)
         image = Image.open(Path(path_to_profiles, profile_name))
@@ -32,7 +32,7 @@ class PrepareProfile:
                     list_coords.append(
                         (
                             1000 - (i * 1000 / height),
-                            coef * 1868835.50459 * j * 30 / width,
+                            coef * j * 30 / width,
                         )
                     )
                     for k in range(j + 1, width):

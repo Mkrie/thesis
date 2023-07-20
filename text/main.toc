@@ -1,11 +1,25 @@
 \babel@toc {russian}{}\relax 
-\contentsline {section}{\numberline {1}Введение}{2}{section.1}%
-\contentsline {section}{\numberline {2}Основная часть}{2}{section.2}%
-\contentsline {subsection}{\numberline {2.1}DOAS}{2}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Обратные задачи}{2}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Некорректность обратных задач}{2}{subsection.2.3}%
-\contentsline {section}{\numberline {3}Постановка задачи}{3}{section.3}%
-\contentsline {section}{\numberline {4}Предложенный метод}{3}{section.4}%
-\contentsline {section}{\numberline {5}Эксперименты}{4}{section.5}%
-\contentsline {section}{\numberline {6}Заключение}{4}{section.6}%
-\contentsline {section}{Список используемой литературы}{5}{section.6}%
+\contentsline {section}{\numberline {1}Введение}{4}{section.1}%
+\contentsline {section}{\numberline {2}Основная часть}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Постановка задачи}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Принципы определения профиля $\text {NO}_2 в атмосфере$}{6}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}DOAS: Дифференциальная Оптическая Абсорбционная Спектроскопия}{6}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Понятие весовой функции и послойной воздушной массы}{12}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Схема зенитных спектральных наблюдений}{16}{subsubsection.2.2.3}%
+\contentsline {section}{\numberline {3}Предложенный метод}{18}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Линейное программирование}{18}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Симплекс метод}{19}{subsubsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.2}Сведение обратной задачи к задаче линейного программирования}{20}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Априорная информация о профиле}{21}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Проверка адекватности}{22}{subsubsection.3.2.2}%
+\contentsline {section}{\numberline {4}Эксперименты}{23}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Подготовка}{23}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Послойные воздушные массы}{23}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Профили}{23}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.3}Прямые измерения}{24}{subsubsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.2}Результаты восстановления}{28}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}I случай(один максимум)}{29}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}II случай(два максимума)}{31}{subsubsection.4.2.2}%
+\contentsline {section}{\numberline {5}Обсуждение результатов}{33}{section.5}%
+\contentsline {section}{\numberline {6}Заключение}{35}{section.6}%
+\contentsline {section}{Список используемой литературы}{36}{section.6}%

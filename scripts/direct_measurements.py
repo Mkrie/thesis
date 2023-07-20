@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 from dataclasses import dataclass
+import matplotlib.pyplot as plt
 from pathlib import Path
 
 
@@ -8,8 +9,35 @@ from pathlib import Path
 class DirectMeasurements:
     profile: str
     sigma: float
-    dir_profiles_name = "profiles_2"
-    dataset_name: str = "dataset_1_csv"
+    dataset_name: str = "dataset_2_csv"
+    dir_profiles_name: str = "profiles_2"
+
+    @staticmethod
+    def generate_bars(heights, p_x, p_y):
+        def integrate(list_h, list_n):
+            sum_n = 0
+            for i in range(len(list_h) - 1):
+                sum_n += 0.5 * (list_h[i] - list_h[i + 1]) * (list_n[i] + list_n[i + 1])
+            return sum_n / (list_h[0] - list_h[-1])
+
+        fin_h = []
+        fin_n = []
+        dict_index = {0.0: len(p_y)}
+        for h in heights:
+            for i, x in enumerate(p_x):
+                if h >= x:
+                    dict_index[h] = i
+                    break
+        keys = list(dict_index.keys())
+        for h in range(len(keys) - 1):
+            fin_h.append(keys[h])
+            fin_n.append(
+                integrate(
+                    p_x[dict_index[keys[h + 1]] : dict_index[keys[h]]],
+                    p_y[dict_index[keys[h + 1]] : dict_index[keys[h]]],
+                )
+            )
+        return fin_h, fin_n
 
     def integration(self, dataset: str) -> float:
         """Calculate direct measurement via integration."""
@@ -18,37 +46,23 @@ class DirectMeasurements:
         msb_tup: tuple[tuple[float]] = tuple()
         with open(Path(path_to_dataset_csv, dataset)) as csv_file:
             reader = csv.reader(csv_file)
-            msb_tup = tuple(map(lambda x: (float(x[0]) * 1000, float(x[1])), reader))
+            msb_tup = tuple(map(lambda x: (float(x[0]) * 10**3, float(x[1])), reader))
         path_to_profile_csv = Path(
             Path(__file__).parents[1], "data", self.dir_profiles_name, "csv"
         )
-
-        prof_tup: tuple[tuple[float]] = tuple()
         with open(Path(path_to_profile_csv, self.profile)) as csv_file:
             reader = csv.reader(csv_file)
-            prof_tup = tuple(
-                sorted(
-                    list(map(lambda x: (float(x[0]), float(x[1])), reader)),
-                    key=lambda y: y[0],
-                )
+            tup_coords: tuple[tuple[str]] = tuple(reader)
+            original_x = tuple(float(x[0]) for x in tup_coords)
+            original_y = tuple(float(x[1]) for x in tup_coords)
+            data_bars = self.generate_bars(
+                [x[0] for x in msb_tup[:21]], original_x, original_y
             )
 
-        max_h_prof_tup: float = max([i[0] for i in prof_tup])
-        sum_X: float = 0
-        # print(msb_tup)
-        for i in range(len(msb_tup) - 1):
-            if (msb_tup[i + 1][0] + msb_tup[i][0]) / 2 > max_h_prof_tup:
-                break
-            j: int = 0
-            while (msb_tup[i + 1][0] + msb_tup[i][0]) / 2 > prof_tup[j][0]:
-                j += 1
-            sum_X += (
-                (msb_tup[i + 1][0] - msb_tup[i][0])
-                * (msb_tup[i + 1][1] + msb_tup[i][1])
-                * prof_tup[j][1]
-                / 2
-            )
-        return sum_X + self.sigma * 10**15 * np.random.randn(1)[0]
+        return (
+            sum([msb_tup[i][1] * data_bars[1][i] * 50 for i in range(20)])
+            + self.sigma * 10**13 * np.random.randn(1)[0]
+        )
 
     def direct_measurements_for_profile(self) -> list[tuple[float]]:
         """Direct measurements for a specific profile."""
@@ -69,5 +83,8 @@ class DirectMeasurements:
 
 
 if __name__ == "__main__":
-    dir_meas = DirectMeasurements("unimod_one.csv", 0.3)
-    print(dir_meas.direct_measurements_for_profile())
+    dir_meas = DirectMeasurements("threemod_2.csv", 0.3)
+    meas = dir_meas.direct_measurements_for_profile()
+    print(meas)
+    # plt.plot(list(map(lambda x: x[0], meas)), list(map(lambda x: x[1], meas)))
+    # plt.show()

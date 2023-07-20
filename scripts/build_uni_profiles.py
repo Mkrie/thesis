@@ -4,23 +4,26 @@ from profile_recovery import ProfileRec
 from pathlib import Path
 
 name_height = {
-    "unimod_one.csv": 0,
-    "unimod_two.csv": 300,
-    "unimod_three.csv": 800,
-    "threemod_one.csv": 100,
-    "threemod_two.csv": 600,
+    "unimod_1.csv": 0,
+    "unimod_2.csv": 300,
+    "unimod_3.csv": 800,
+    "threemod_1.csv": 100,
+    "threemod_2.csv": 600,
 }
 
 if __name__ == "__main__":
     path_to_profiles = Path(Path(__file__).parents[1], "data", "profiles_2", "csv")
-    sigma: float = 0.3
+    sigma: float = 0.1
     k: int = 1
-    number_of_trials: int = 10
+    number_of_trials: int = 20
     for txt_path in sorted(list(path_to_profiles.glob("*"))):
-        prof_recovery = ProfileRec(txt_path.name)
+        if txt_path.name == "unimod_1.csv":
+            plt.figure()
+            k = 1
+        prof_recovery = ProfileRec(txt_path.name, "profiles_2", "dataset_2_csv")
         rec = prof_recovery.linear_programming(sigma)
         sp = plt.subplot(2, 2, k)
-        plt.ylim(0, 10**15)
+        # plt.ylim(0, 10**15)
         rec_min_max = [[x, x] for x in rec[1]]
         for _ in range(number_of_trials):
             rec = prof_recovery.linear_programming(sigma)
@@ -50,7 +53,7 @@ if __name__ == "__main__":
             plt.grid(which="minor", color="k", linestyle=":")
             plt.xlim(0, 1000)
             plt.xlabel("h[m]")
-            plt.ylabel(r"$n$ [$m^{-3}$]")
+            plt.ylabel(r"$n$ [$cm^{-3}$]")
             plt.title(
                 f"{txt_path.name.split('.')[0]}, {'min' if txt_path.name[0]=='t' else 'max'}:{name_height.get(txt_path.name)}"
             )
