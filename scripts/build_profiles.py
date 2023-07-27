@@ -90,112 +90,120 @@ def build(sigma: float, number_of_trials: int, profiles: str, dataset: str, num_
     for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
         if txt_path.name == "profile_06_42.csv":
             continue
-        sp = plt.subplot(3, 3, k)
         prof_recovery = ProfileRec(txt_path.name, profiles, dataset)
         if num_max == 3:
             rec = prof_recovery.linear_programming_3(sigma)
         else:
             rec = prof_recovery.linear_programming(sigma)
-        rec_min_max = [[x, x] for x in rec[1]]
         rec_avg = [0] * len(rec[1])
         rec_list = []
         step = rec[0][1] - rec[0][0]
-        dir_meas = DirectMeasurements(
-            txt_path.name, sigma, dataset, profiles
-        )
+        dir_meas = DirectMeasurements(txt_path.name, sigma, dataset, profiles)
         dir_meas_obj = dir_meas.direct_measurements_for_profile()
         for _ in range(number_of_trials):
             if num_max == 3:
-                rec = prof_recovery.linear_programming_3(sigma, [(x[0], x[1] + sigma * 10 ** 13 * np.random.randn(1)[0])
-                                                                 for x in dir_meas_obj])
+                rec = prof_recovery.linear_programming_3(
+                    sigma,
+                    [(x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0]) for x in dir_meas_obj],
+                )
             else:
-                rec = prof_recovery.linear_programming(sigma, [(x[0], x[1] + sigma * 10 ** 13 * np.random.randn(1)[0])
-                                                               for x in dir_meas_obj])
+                rec = prof_recovery.linear_programming(
+                    sigma,
+                    [(x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0]) for x in dir_meas_obj],
+                )
             for i in range(len(rec[1])):
                 rec_avg[i] += rec[1][i]
             rec_list.append(rec[1])
-        plt.errorbar(
-            [x + 0.5 * step for x in rec[0]],
-            [r / number_of_trials for r in rec_avg],
-            yerr=[np.std([x[i] for x in rec_list]) for i in range(len(rec[1]))],
-            fmt="o",
-            ecolor="black",
-            elinewidth=2.5,
-            capsize=4,
-            color="black",
-            label=f"average restored n={number_of_trials}",
-        )
-        list_discrepancy = list()
-        step = rec[0][1] - rec[0][0]
-        plt.bar(
-            [h + 0.5 * step for h in rec[0]],
-            rec[1],
-            width=step,
-            linewidth=1,
-            edgecolor="black",
-            alpha=0.5,
-            color="red",
-            linestyle="-",
-            label="one restored profile",
-        )
-        with open(txt_path, "r") as csv_file:
-            reader = csv.reader(csv_file)
-            tup_coords: tuple[tuple[str]] = tuple(reader)
-            plt.minorticks_on()
-            plt.grid(which="major", color="k", linewidth=1)
-            plt.grid(which="minor", color="k", linestyle=":")
-            plt.xlabel("h[m]")
-            plt.ylabel(r"$n$ [$cm^{-3}$]")
-            list_text = txt_path.name.replace(".csv", "").split("_")
-            if profiles == "profiles_1":
-                plt.xlim(0, 10**3)
-                plt.title(
-                    f"""{dict_profile_time.get(tuple(list_text[1:]))}: {list_text[1]}:{list_text[2]}"""
-                )
-            else:
-                plt.xlim(0, 1. * 10**3)
-                plt.title(name_height.get(txt_path.name))
-            original_x = tuple(float(x[0]) for x in tup_coords)
-            original_y = tuple(float(x[1]) for x in tup_coords)
-            list_discrepancy.append((0, fabs(rec[1][0] - original_y[-1])))
-            for res_i, res_h in enumerate(rec[0]):
-                for orig_i, orig_h in enumerate(original_x):
-                    if res_h >= orig_h:
-                        list_discrepancy.append(
-                            (
-                                rec[0][res_i],
-                                sqrt((rec[1][res_i] - original_y[orig_i]) ** 2),
-                            )
-                        )
-                        break
-            data_bars = generate_bars(rec[0], original_x, original_y)
-            plt.bar(
-                [h + 0.5 * step for h in data_bars[0]],
-                data_bars[1],
-                width=step,
-                linewidth=1,
-                alpha=0.5,
-                edgecolor="darkblue",
-                color="turquoise",
-                linestyle="-",
-                label="original bar",
-            )
+        for ext in [1, 2, 4, 6]:
+            sp = plt.subplot(2, 2, k)
+            rec_list_tmp = [
+                tuple(sum(x[i : i + ext]) / ext for i in range(0, len(x), ext)) for x in rec_list
+            ]
             plt.errorbar(
-                original_x,
-                original_y,
-                linewidth=2,
-                label="original",
+                [x + ext * 0.5 * step for x in rec[0][::ext]],
+                [
+                    sum(rec_avg[i : i + ext]) / number_of_trials / ext
+                    for i in range(0, len(rec_avg), ext)
+                ],
+                yerr=[np.std([x[i] for x in rec_list_tmp]) for i in range(len(rec[1][::ext]))],
+                fmt="o",
+                ecolor="black",
+                elinewidth=2.5,
+                capsize=4,
+                color="black",
+                label=f"average restored n={number_of_trials}",
             )
-        plt.legend()
-        k += 1
-        if k > 9:
-            k = 1
-            plt.figure()
+            list_discrepancy = list()
+            step = rec[0][1] - rec[0][0]
+            plt.bar(
+                [h + ext * 0.5 * step for h in rec[0][::ext]],
+                [sum(rec[1][i : i + ext]) / ext for i in range(0, len(rec[1]), ext)],
+                width=step * ext,
+                linewidth=1,
+                edgecolor="black",
+                alpha=0.5,
+                color="red",
+                linestyle="-",
+                label="one restored profile",
+            )
+            with open(txt_path, "r") as csv_file:
+                reader = csv.reader(csv_file)
+                tup_coords: tuple[tuple[str]] = tuple(reader)
+                plt.minorticks_on()
+                plt.grid(which="major", color="k", linewidth=1)
+                plt.grid(which="minor", color="k", linestyle=":")
+                plt.xlabel("h[m]")
+                plt.ylabel(r"$n$ [$cm^{-3}$]")
+                list_text = txt_path.name.replace(".csv", "").split("_")
+                if profiles == "profiles_1":
+                    plt.xlim(0, 10**3)
+                    plt.title(
+                        f"""{dict_profile_time.get(tuple(list_text[1:]))}: {list_text[1]}:{list_text[2]}, averaging over {ext*50} m"""
+                    )
+                else:
+                    plt.xlim(0, 1.0 * 10**3)
+                    plt.title(name_height.get(txt_path.name))
+                original_x = tuple(float(x[0]) for x in tup_coords)
+                original_y = tuple(float(x[1]) for x in tup_coords)
+                list_discrepancy.append((0, fabs(rec[1][0] - original_y[-1])))
+                for res_i, res_h in enumerate(rec[0]):
+                    for orig_i, orig_h in enumerate(original_x):
+                        if res_h >= orig_h:
+                            list_discrepancy.append(
+                                (
+                                    rec[0][res_i],
+                                    sqrt((rec[1][res_i] - original_y[orig_i]) ** 2),
+                                )
+                            )
+                            break
+                data_bars = generate_bars(rec[0], original_x, original_y)
+                plt.bar(
+                    [h + 0.5 * step for h in data_bars[0]],
+                    data_bars[1],
+                    width=step,
+                    linewidth=1,
+                    alpha=0.5,
+                    edgecolor="darkblue",
+                    color="turquoise",
+                    linestyle="-",
+                    label="original bar",
+                )
+                plt.errorbar(
+                    original_x,
+                    original_y,
+                    linewidth=2,
+                    label="original",
+                )
+            plt.legend()
+            k += 1
+            plt.subplots_adjust(
+                left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.35
+            )
+        k = 1
+        plt.figure()
         print(txt_path.name)
-        plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.35)
     plt.show()
-    # plt.savefig("1.png")
 
 
 if __name__ == "__main__":
-    build(0.3, 33, "profiles_2", "dataset_3_csv", 3)
+    build(sigma=0.3, number_of_trials=33, profiles="profiles_2", dataset="dataset_3_csv", num_max=3)

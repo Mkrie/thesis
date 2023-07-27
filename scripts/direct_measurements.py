@@ -47,17 +47,13 @@ class DirectMeasurements:
         with open(Path(path_to_dataset_csv, dataset)) as csv_file:
             reader = csv.reader(csv_file)
             msb_tup = tuple(map(lambda x: (float(x[0]) * 10**3, float(x[1])), reader))
-        path_to_profile_csv = Path(
-            Path(__file__).parents[1], "data", self.dir_profiles_name, "csv"
-        )
+        path_to_profile_csv = Path(Path(__file__).parents[1], "data", self.dir_profiles_name, "csv")
         with open(Path(path_to_profile_csv, self.profile)) as csv_file:
             reader = csv.reader(csv_file)
             tup_coords: tuple[tuple[str]] = tuple(reader)
             original_x = tuple(float(x[0]) for x in tup_coords)
             original_y = tuple(float(x[1]) for x in tup_coords)
-            data_bars = self.generate_bars(
-                [x[0] for x in msb_tup[:21]], original_x, original_y
-            )
+            data_bars = self.generate_bars([x[0] for x in msb_tup[:21]], original_x, original_y)
 
         return (
             sum([msb_tup[i][1] * data_bars[1][i] * 50 for i in range(20)])
@@ -72,9 +68,7 @@ class DirectMeasurements:
             for_prof_calc.append(
                 (
                     float(
-                        txt_path.name.replace("msbgraf_", "")
-                        .replace(".csv", "")
-                        .replace("_", ".")
+                        txt_path.name.replace("msbgraf_", "").replace(".csv", "").replace("_", ".")
                     ),
                     self.integration(txt_path.name),
                 )

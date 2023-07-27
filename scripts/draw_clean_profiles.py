@@ -140,8 +140,8 @@ def build(sigma: float, number_of_trials: int, profiles: str, dataset: str) -> N
                     f"""{dict_profile_time.get(tuple(list_text[1:]))}: {list_text[1]}:{list_text[2]}"""
                 )
             else:
-                plt.xlim(0, 1. * 10**3)
-                plt.title(f"error={sigma}*10^15, "+name_height.get(txt_path.name))
+                plt.xlim(0, 1.0 * 10**3)
+                plt.title(f"error={sigma}*10^15, " + name_height.get(txt_path.name))
             original_x = tuple(float(x[0]) for x in tup_coords)
             original_y = tuple(float(x[1]) for x in tup_coords)
             list_discrepancy.append((0, fabs(rec[1][0] - original_y[-1])))

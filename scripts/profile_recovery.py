@@ -18,9 +18,7 @@ class ProfileRec:
         self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k
     ):
         """solution at a certain maximum"""
-        restriction_1 = [
-            tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)
-        ]
+        restriction_1 = [tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)]
         restriction_2 = [
             tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2)) for m in range(k, n - 1)
         ]
@@ -30,19 +28,13 @@ class ProfileRec:
             + restriction_1
             + restriction_2
         )
-        rhs_ineq = (
-            [-x for x in xi]
-            + list(xi)
-            + [0] * (len(restriction_1) + len(restriction_2))
-        )
+        rhs_ineq = [-x for x in xi] + list(xi) + [0] * (len(restriction_1) + len(restriction_2))
         return linprog(c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq, bounds=bnd)
 
     def linear_programming(self, sigma: float, dir_meas_obj=None):
         """Solving a linear programming problem."""
         if dir_meas_obj is None:
-            dir_meas = DirectMeasurements(
-                self.profile, sigma, self.dataset_name, self.profile_path
-            )
+            dir_meas = DirectMeasurements(self.profile, sigma, self.dataset_name, self.profile_path)
             dir_meas_obj = dir_meas.direct_measurements_for_profile()
         last = dir_meas_obj[-1][1]
         dir_meas_obj = [(x[0], x[1] - last) for x in dir_meas_obj]
@@ -69,9 +61,7 @@ class ProfileRec:
         self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k, k_2, k_3
     ):
         """solution at a certain maximum"""
-        restriction_1 = [
-            tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)
-        ]
+        restriction_1 = [tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)]
         restriction_2 = [
             tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2)) for m in range(k, k_2 - 1)
         ]
@@ -92,16 +82,15 @@ class ProfileRec:
         rhs_ineq = (
             [-x for x in xi]
             + list(xi)
-            + [0] * (len(restriction_1) + len(restriction_2) +  len(restriction_3) + len(restriction_4))
+            + [0]
+            * (len(restriction_1) + len(restriction_2) + len(restriction_3) + len(restriction_4))
         )
         return linprog(c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq, bounds=bnd)
 
     def linear_programming_3(self, sigma: float, dir_meas_obj=None):
         """Solving a linear programming problem."""
         if dir_meas_obj is None:
-            dir_meas = DirectMeasurements(
-                self.profile, sigma, self.dataset_name, self.profile_path
-            )
+            dir_meas = DirectMeasurements(self.profile, sigma, self.dataset_name, self.profile_path)
             dir_meas_obj = dir_meas.direct_measurements_for_profile()
         last = dir_meas_obj[-1][1]
         dir_meas_obj = [(x[0], x[1] - last) for x in dir_meas_obj]
@@ -125,6 +114,7 @@ class ProfileRec:
             [1 / (heights[1] - heights[0]) * n_i for n_i in list(opt_optimal.x)[1:]],
             z_min,
         )
+
     def make_data(self, n: int):
         path_to_dataset_csv = Path(Path(__file__).parents[1], "data", self.dataset_name)
         matrix_a: list(tuple) = list()

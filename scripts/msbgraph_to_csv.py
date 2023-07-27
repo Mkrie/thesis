@@ -21,9 +21,7 @@ class Msbgraph:
         path_to_csv.mkdir()
         for txt_path in Path(path_to_data, self.dataset_name).glob("*.txt"):
             with open(txt_path, "r") as file:
-                with open(
-                    Path(path_to_csv, txt_path.name.replace("txt", "csv")), "w"
-                ) as csvfile:
+                with open(Path(path_to_csv, txt_path.name.replace("txt", "csv")), "w") as csvfile:
                     writer = csv.writer(csvfile)
                     writer.writerows(
                         tuple(
