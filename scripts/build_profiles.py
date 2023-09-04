@@ -56,6 +56,10 @@ name_height = {
     "unimod1000big_3.csv": "left=500m, width=1000m, val=50*10^11",
 }
 
+font = {"family": "serif", "color": "red", "weight": "bold", "size": 12}
+
+box = {"facecolor": "none", "edgecolor": "green", "boxstyle": "round"}
+
 
 def generate_bars(heights, p_x, p_y):
     def integrate(list_h, list_n):
@@ -64,6 +68,7 @@ def generate_bars(heights, p_x, p_y):
             sum_n += 0.5 * (list_h[i] - list_h[i + 1]) * (list_n[i] + list_n[i + 1])
         return sum_n / (list_h[0] - list_h[-1])
 
+    # print(heights, p_x, p_y)
     fin_h = []
     fin_n = []
     dict_index = {0.0: len(p_y)}
@@ -119,13 +124,16 @@ def build(sigma: float, number_of_trials: int, profiles: str, dataset: str, num_
             rec_list_tmp = [
                 tuple(sum(x[i : i + ext]) / ext for i in range(0, len(x), ext)) for x in rec_list
             ]
+            tmp_error = [np.std([x[i] for x in rec_list_tmp]) for i in range(len(rec[1][::ext]))]
+            tmp_bars = [
+                sum(rec_avg[i : i + ext]) / number_of_trials / ext
+                for i in range(0, len(rec_avg), ext)
+            ]
+            res_int = sum(tmp_bars) * ext * 0.5 * step
             plt.errorbar(
                 [x + ext * 0.5 * step for x in rec[0][::ext]],
-                [
-                    sum(rec_avg[i : i + ext]) / number_of_trials / ext
-                    for i in range(0, len(rec_avg), ext)
-                ],
-                yerr=[np.std([x[i] for x in rec_list_tmp]) for i in range(len(rec[1][::ext]))],
+                tmp_bars,
+                yerr=tmp_error,
                 fmt="o",
                 ecolor="black",
                 elinewidth=2.5,
@@ -176,11 +184,11 @@ def build(sigma: float, number_of_trials: int, profiles: str, dataset: str, num_
                                 )
                             )
                             break
-                data_bars = generate_bars(rec[0], original_x, original_y)
+                data_bars = generate_bars(rec[0][::ext], original_x, original_y)
                 plt.bar(
-                    [h + 0.5 * step for h in data_bars[0]],
+                    [h + 0.5 * step * ext for h in data_bars[0]],
                     data_bars[1],
-                    width=step,
+                    width=step * ext,
                     linewidth=1,
                     alpha=0.5,
                     edgecolor="darkblue",
@@ -194,16 +202,20 @@ def build(sigma: float, number_of_trials: int, profiles: str, dataset: str, num_
                     linewidth=2,
                     label="original",
                 )
+                text = f"""int_original={0.5*step*ext*sum(data_bars[1]):4.3}\nint_av_res={res_int:4.3}\nint_av_res_er={sqrt(sum([x**2 for x in tmp_error])):4.3}\ns/n={0.5*step*ext*sum(data_bars[1])/sqrt(sum([x**2 for x in tmp_error])):4.3}"""
+                plt.text(x=600, y=max(original_y) * 0.5, s=text, fontdict=font, bbox=box)
             plt.legend()
             k += 1
             plt.subplots_adjust(
                 left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.35
             )
+            # break
         k = 1
         plt.figure()
         print(txt_path.name)
+        # break
     plt.show()
 
 
 if __name__ == "__main__":
-    build(sigma=0.3, number_of_trials=33, profiles="profiles_2", dataset="dataset_3_csv", num_max=3)
+    build(sigma=0.3, number_of_trials=33, profiles="profiles_1", dataset="dataset_3_csv", num_max=3)
