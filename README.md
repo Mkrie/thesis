@@ -1,5 +1,8 @@
 ## Измерительно-вычислительная система для оценки вертикального профиля двуокиси азота в атмосфере
 ##### notebooks:
+* [СВ/СЗ оригинальные профили](notebooks/eigenval_eigenvec_orig.ipynb)
+* [СВ/СЗ модельные профили](notebooks/eigenval_eigenvec_model.ipynb)
+* [Оптимальное статистическое оценивание](notebooks/eigenval_eigenvec_model.ipynb)
 ##### scripts:
 * [Прямые измерения(наклонное содержание)](scripts/direct_measurements.py)
 * [Восстановление профилей](scripts/profile_recovery.py)
