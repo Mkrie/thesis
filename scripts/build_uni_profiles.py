@@ -42,7 +42,9 @@ if __name__ == "__main__":
             capsize=4,
             color="black",
         )
-        plt.errorbar(rec[0], rec[1], fmt="-o", linewidth=4, color="red", label="restored")
+        plt.errorbar(
+            rec[0], rec[1], fmt="-o", linewidth=4, color="red", label="restored"
+        )
         with open(Path(path_to_profiles, txt_path.name), "r") as csv_file:
             reader = csv.reader(csv_file)
             tup_coords: tuple[tuple[str]] = tuple(reader)

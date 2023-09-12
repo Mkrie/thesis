@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 from profile_recovery import ProfileRec
 from direct_measurements import DirectMeasurements
+from bayesan import Bayesan
 
 dict_profile_time = {
     ("06", "42"): "PM004A",
@@ -89,33 +90,49 @@ def generate_bars(heights, p_x, p_y):
     return fin_h, fin_n
 
 
-def build(sigma: float, number_of_trials: int, profiles: str, dataset: str, num_max: int) -> None:
+def build(
+    sigma: float, number_of_trials: int, profiles: str, dataset: str, num_max: int, method: int = 1
+) -> None:
     path_to_profiles = Path(Path(__file__).parents[1], "data", profiles, "csv")
     k: int = 1
     for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
         if txt_path.name == "profile_06_42.csv":
             continue
-        prof_recovery = ProfileRec(txt_path.name, profiles, dataset)
-        if num_max == 3:
-            rec = prof_recovery.linear_programming_3(sigma)
-        else:
-            rec = prof_recovery.linear_programming(sigma)
+        if method == 1:
+            prof_recovery = ProfileRec(txt_path.name, profiles, dataset)
+            if num_max == 3:
+                rec = prof_recovery.linear_programming_3(sigma)
+                # print(rec)
+            else:
+                rec = prof_recovery.linear_programming(sigma)
+        elif method == 2:
+            prof_recovery = Bayesan(txt_path.name, profiles, dataset)
+            rec = prof_recovery.assessment(sigma, n=21)
         rec_avg = [0] * len(rec[1])
         rec_list = []
         step = rec[0][1] - rec[0][0]
         dir_meas = DirectMeasurements(txt_path.name, sigma, dataset, profiles)
         dir_meas_obj = dir_meas.direct_measurements_for_profile()
         for _ in range(number_of_trials):
-            if num_max == 3:
-                rec = prof_recovery.linear_programming_3(
-                    sigma,
-                    [(x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0]) for x in dir_meas_obj],
-                )
-            else:
-                rec = prof_recovery.linear_programming(
-                    sigma,
-                    [(x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0]) for x in dir_meas_obj],
-                )
+            if method == 1:
+                if num_max == 3:
+                    rec = prof_recovery.linear_programming_3(
+                        sigma,
+                        [
+                            (x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0])
+                            for x in dir_meas_obj
+                        ],
+                    )
+                else:
+                    rec = prof_recovery.linear_programming(
+                        sigma,
+                        [
+                            (x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0])
+                            for x in dir_meas_obj
+                        ],
+                    )
+            elif method == 2:
+                rec = prof_recovery.linear_programming(sigma)
             for i in range(len(rec[1])):
                 rec_avg[i] += rec[1][i]
             rec_list.append(rec[1])
@@ -218,4 +235,11 @@ def build(sigma: float, number_of_trials: int, profiles: str, dataset: str, num_
 
 
 if __name__ == "__main__":
-    build(sigma=0.3, number_of_trials=33, profiles="profiles_1", dataset="dataset_3_csv", num_max=3)
+    build(
+        sigma=0.3,
+        number_of_trials=3,
+        profiles="profiles_1",
+        dataset="dataset_3_csv",
+        num_max=1,
+        method=2,
+    )

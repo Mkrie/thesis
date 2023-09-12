@@ -9,8 +9,8 @@ from pathlib import Path
 class DirectMeasurements:
     profile: str
     sigma: float
-    dataset_name: str = "dataset_2_csv"
-    dir_profiles_name: str = "profiles_2"
+    dataset_name: str = "dataset_3_csv"
+    dir_profiles_name: str = "profiles_1"
 
     @staticmethod
     def generate_bars(heights, p_x, p_y):
@@ -54,7 +54,7 @@ class DirectMeasurements:
             original_x = tuple(float(x[0]) for x in tup_coords)
             original_y = tuple(float(x[1]) for x in tup_coords)
             data_bars = self.generate_bars([x[0] for x in msb_tup[:21]], original_x, original_y)
-
+        # print(data_bars)
         return (
             sum([msb_tup[i][1] * data_bars[1][i] * 50 for i in range(20)])
             + self.sigma * 10**13 * np.random.randn(1)[0]

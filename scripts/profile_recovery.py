@@ -18,7 +18,9 @@ class ProfileRec:
         self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k
     ):
         """solution at a certain maximum"""
-        restriction_1 = [tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)]
+        restriction_1 = [
+            tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)
+        ]
         restriction_2 = [
             tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2)) for m in range(k, n - 1)
         ]
@@ -28,13 +30,19 @@ class ProfileRec:
             + restriction_1
             + restriction_2
         )
-        rhs_ineq = [-x for x in xi] + list(xi) + [0] * (len(restriction_1) + len(restriction_2))
+        rhs_ineq = (
+            [-x for x in xi]
+            + list(xi)
+            + [0] * (len(restriction_1) + len(restriction_2))
+        )
         return linprog(c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq, bounds=bnd)
 
     def linear_programming(self, sigma: float, dir_meas_obj=None):
         """Solving a linear programming problem."""
         if dir_meas_obj is None:
-            dir_meas = DirectMeasurements(self.profile, sigma, self.dataset_name, self.profile_path)
+            dir_meas = DirectMeasurements(
+                self.profile, sigma, self.dataset_name, self.profile_path
+            )
             dir_meas_obj = dir_meas.direct_measurements_for_profile()
         last = dir_meas_obj[-1][1]
         dir_meas_obj = [(x[0], x[1] - last) for x in dir_meas_obj]
@@ -58,18 +66,31 @@ class ProfileRec:
         )
 
     def solution_at_certain_maximum_3(
-        self, xi: tuple[float], n: int, matrix_a: list[tuple[float]], obj, bnd, k, k_2, k_3
+        self,
+        xi: tuple[float],
+        n: int,
+        matrix_a: list[tuple[float]],
+        obj,
+        bnd,
+        k,
+        k_2,
+        k_3,
     ):
         """solution at a certain maximum"""
-        restriction_1 = [tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)]
+        restriction_1 = [
+            tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k)
+        ]
         restriction_2 = [
-            tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2)) for m in range(k, k_2 - 1)
+            tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2))
+            for m in range(k, k_2 - 1)
         ]
         restriction_3 = [
-            tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2)) for m in range(k_2, k_3 - 1)
+            tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2))
+            for m in range(k_2, k_3 - 1)
         ]
         restriction_4 = [
-            tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2)) for m in range(k_3, n - 1)
+            tuple([0] + [0] * m + [-1, 1] + [0] * (n - m - 2))
+            for m in range(k_3, n - 1)
         ]
         lhs_ineq = (
             [[-1, *list(map(lambda x: -x, line))] for line in matrix_a]
@@ -83,14 +104,21 @@ class ProfileRec:
             [-x for x in xi]
             + list(xi)
             + [0]
-            * (len(restriction_1) + len(restriction_2) + len(restriction_3) + len(restriction_4))
+            * (
+                len(restriction_1)
+                + len(restriction_2)
+                + len(restriction_3)
+                + len(restriction_4)
+            )
         )
         return linprog(c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq, bounds=bnd)
 
     def linear_programming_3(self, sigma: float, dir_meas_obj=None):
         """Solving a linear programming problem."""
         if dir_meas_obj is None:
-            dir_meas = DirectMeasurements(self.profile, sigma, self.dataset_name, self.profile_path)
+            dir_meas = DirectMeasurements(
+                self.profile, sigma, self.dataset_name, self.profile_path
+            )
             dir_meas_obj = dir_meas.direct_measurements_for_profile()
         last = dir_meas_obj[-1][1]
         dir_meas_obj = [(x[0], x[1] - last) for x in dir_meas_obj]
@@ -100,11 +128,15 @@ class ProfileRec:
         obj: list[int] = [1, *[0] * n]
         bnd = [(0, float("inf")) for _ in range(n + 1)]
         z_min: float = 10**100
-        opt_optimal = self.solution_at_certain_maximum_3(xi, n, matrix_a, obj, bnd, 0, 1, 2)
+        opt_optimal = self.solution_at_certain_maximum_3(
+            xi, n, matrix_a, obj, bnd, 0, 1, 2
+        )
         for k in range(1, n):
             for k_2 in range(k, n):
                 for k_3 in range(k_2, n):
-                    opt = self.solution_at_certain_maximum_3(xi, n, matrix_a, obj, bnd, k, k_2, k_3)
+                    opt = self.solution_at_certain_maximum_3(
+                        xi, n, matrix_a, obj, bnd, k, k_2, k_3
+                    )
                     if opt.success:
                         if tuple(opt.x)[0] < z_min:
                             opt_optimal = opt

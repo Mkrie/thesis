@@ -8,16 +8,21 @@ if __name__ == "__main__":
     ) as csv_file:
         msb = tuple(csv.reader(csv_file))
     print(msb)
-    for txt_path in sorted(Path(Path(__file__).parents[1], "data", "dataset_2_csv").glob("*")):
+    for txt_path in sorted(
+        Path(Path(__file__).parents[1], "data", "dataset_2_csv").glob("*")
+    ):
         print(txt_path)
         print(f"old = {txt_path}")
         with open(txt_path, "r") as csv_read:
             reader = list(csv.reader(csv_read))
             new_values = []
             for i in range(len(msb)):
-                new_values.append([reader[i][0], float(reader[i][1]) - float(msb[i][1])])
+                new_values.append(
+                    [reader[i][0], float(reader[i][1]) - float(msb[i][1])]
+                )
             with open(
-                Path(Path(__file__).parents[1], "data", "dataset_3_csv", txt_path.name), "w"
+                Path(Path(__file__).parents[1], "data", "dataset_3_csv", txt_path.name),
+                "w",
             ) as csv_write:
                 writer = csv.writer(csv_write)
                 writer.writerows(new_values)
