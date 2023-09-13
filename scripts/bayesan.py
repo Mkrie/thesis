@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
+from math import sqrt, fabs
 
 from direct_measurements import DirectMeasurements
 from scripts.profile_recovery import ProfileRec
@@ -18,9 +19,6 @@ class Bayesan:
     def assessment(self, sigma, n):
         xi, M, h = self.get_data(sigma, n)
         h_0 = 300
-        F = np.array(
-            [[2.71828182846 ** (-(h[i] - h[j]) / h_0) for j in range(n)] for i in range(n)]
-        )
         f_0 = np.array(
             [
                 218828033097.85452,
@@ -44,6 +42,15 @@ class Bayesan:
                 8702834142.601583,
                 5583984155.379506,
                 5715754433.481799,
+            ]
+        )
+        F = np.array(
+            [
+                [
+                    0.25 * f_0[j] * f_0[i] * 2.71828182846 ** (-fabs((h[i] - h[j]) / h_0))
+                    for j in range(n)
+                ]
+                for i in range(n)
             ]
         )
         out = F @ M.T @ np.linalg.inv(M @ F @ M.T) @ (xi - M @ f_0) + f_0
