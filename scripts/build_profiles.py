@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 from math import fabs, sqrt
 import numpy as np
@@ -6,7 +7,6 @@ import matplotlib.pyplot as plt
 
 from profile_recovery import ProfileRec
 from direct_measurements import DirectMeasurements
-from bayesan import Bayesan
 
 dict_profile_time = {
     ("06", "42"): "PM004A",
@@ -25,69 +25,28 @@ dict_profile_time = {
     ("18", "04"): "PM011D",
 }
 
-name_height = {
-    "unimod_1.csv": "left=0m, width=100m, val=6*10^11",
-    "unimod_2.csv": "left=300m, width=100m, val=6*10^11",
-    "unimod_3.csv": "left=800m, width=100m, val=6*10^11",
-    "unimod_4.csv": "left=0m, width=200m, val=3*10^11",
-    "unimod_5.csv": "left=300m, width=200m, val=3*10^11",
-    "unimod_6.csv": "left=800m, width=200m, val=3*10^11",
-    "unimod_1_1.csv": "left=0m, width=100m, val=60*10^11",
-    "unimod_2_1.csv": "left=300m, width=100m, val=60*10^11",
-    "unimod_3_1.csv": "left=800m, width=100m, val=60*10^11",
-    "unimod_4_1.csv": "left=0m, width=200m, val=30*10^11",
-    "unimod_5_1.csv": "left=300m, width=200m, val=30*10^11",
-    "unimod_6_1.csv": "left=800m, width=200m, val=30*10^11",
-    "threemod_1.csv": "left=0m, width=100m, val=6*10^11",
-    "threemod_2.csv": "left=600m, width=100m, val=6*10^11",
-    "threemod_3.csv": "left=0m, width=200m, val=3*10^11",
-    "threemod_4.csv": "left=600m, width=200m, val=3*10^11",
-    "threemod_1_1.csv": "left=0m, width=100m, val=60*10^11",
-    "threemod_2_1.csv": "left=600m, width=100m, val=60*10^11",
-    "threemod_3_1.csv": "left=0m, width=200m, val=30*10^11",
-    "threemod_4_1.csv": "left=600m, width=200m, val=30*10^11",
-    "unimod500big_1.csv": "left=0m, width=500m, val=1.2*10^11",
-    "unimod500big_2.csv": "left=200m, width=500m, val=1.2*10^11",
-    "unimod500big_3.csv": "left=500m, width=500m, val=1.2*10^11",
-    "unimod500big_1_1.csv": "left=0m, width=500m, val=12*10^11",
-    "unimod500big_2_1.csv": "left=200m, width=500m, val=12*10^11",
-    "unimod500big_3_1.csv": "left=500m, width=500m, val=12*10^11",
-    "unimod1000big_1.csv": "left=0m, width=1000m, val=50*10^11",
-    "unimod1000big_2.csv": "left=200m, width=1000m, val=50*10^11",
-    "unimod1000big_3.csv": "left=500m, width=1000m, val=50*10^11",
-}
 
-font = {"family": "serif", "color": "red", "weight": "bold", "size": 12}
+with open(Path(Path.cwd().parent,
+               "data",
+               "profiles_2",
+               "profiles_2.json"), "r") as json_file:
+    name_height = json.load(json_file)
 
-box = {"facecolor": "none", "edgecolor": "green", "boxstyle": "round"}
+font = {"family": "serif",
+        "color": "red",
+        "weight": "bold",
+        "size": 12}
+
+box = {"facecolor": "none",
+       "edgecolor": "green",
+       "boxstyle": "round"}
+
+profiles_names = "threemod_1.csv"
 
 
-def generate_bars(heights, p_x, p_y):
-    def integrate(list_h, list_n):
-        sum_n = 0
-        for i in range(len(list_h) - 1):
-            sum_n += 0.5 * (list_h[i] - list_h[i + 1]) * (list_n[i] + list_n[i + 1])
-        return sum_n / (list_h[0] - list_h[-1])
+class BuildProfiles(object):
+    """Class for plotting graphs after restoring profiles."""
 
-    # print(heights, p_x, p_y)
-    fin_h = []
-    fin_n = []
-    dict_index = {0.0: len(p_y)}
-    for h in heights:
-        for i, x in enumerate(p_x):
-            if h >= x:
-                dict_index[h] = i
-                break
-    keys = list(dict_index.keys())
-    for h in range(len(keys) - 1):
-        fin_h.append(keys[h])
-        fin_n.append(
-            integrate(
-                p_x[dict_index[keys[h + 1]] : dict_index[keys[h]]],
-                p_y[dict_index[keys[h + 1]] : dict_index[keys[h]]],
-            )
-        )
-    return fin_h, fin_n
 
 
 def build(
@@ -99,19 +58,21 @@ def build(
         if txt_path.name == "profile_06_42.csv":
             continue
         if method == 1:
-            prof_recovery = ProfileRec(txt_path.name, profiles, dataset)
+            prof_recovery = ProfileRec(profile=txt_path.name,
+                                       profile_path=profiles,
+                                       dataset_name=dataset)
             if num_max == 3:
-                rec = prof_recovery.linear_programming_3(sigma)
-                # print(rec)
-            else:
-                rec = prof_recovery.linear_programming(sigma)
-        elif method == 2:
-            prof_recovery = Bayesan(txt_path.name, profiles, dataset)
-            rec = prof_recovery.assessment(sigma, n=21)
+                rec = prof_recovery.linear_programming_3(sigma=sigma)
+            elif num_max == 1:
+                rec = prof_recovery.linear_programming_1(sigma=sigma)
         rec_avg = [0] * len(rec[1])
         rec_list = []
         step = rec[0][1] - rec[0][0]
-        dir_meas = DirectMeasurements(txt_path.name, sigma, dataset, profiles)
+
+        dir_meas = DirectMeasurements(profile=txt_path.name,
+                                      sigma=sigma,
+                                      dataset_name=dataset,
+                                      dir_profiles_name=profiles)
         dir_meas_obj = dir_meas.direct_measurements_for_profile()
         for _ in range(number_of_trials):
             if method == 1:
@@ -124,7 +85,7 @@ def build(
                         ],
                     )
                 else:
-                    rec = prof_recovery.linear_programming(
+                    rec = prof_recovery.linear_programming_1(
                         sigma,
                         [
                             (x[0], x[1] + sigma * 10**13 * np.random.randn(1)[0])
@@ -132,7 +93,7 @@ def build(
                         ],
                     )
             elif method == 2:
-                rec = prof_recovery.linear_programming(sigma)
+                rec = prof_recovery.linear_programming_1(sigma)
             for i in range(len(rec[1])):
                 rec_avg[i] += rec[1][i]
             rec_list.append(rec[1])
@@ -201,7 +162,7 @@ def build(
                                 )
                             )
                             break
-                data_bars = generate_bars(rec[0][::ext], original_x, original_y)
+                data_bars = DirectMeasurements.generate_bars(rec[0][::ext], original_x, original_y)
                 plt.bar(
                     [h + 0.5 * step * ext for h in data_bars[0]],
                     data_bars[1],
@@ -220,7 +181,7 @@ def build(
                     label="original",
                 )
                 text = f"""int_original={0.5*step*ext*sum(data_bars[1]):4.3}\nint_av_res={res_int:4.3}\nint_av_res_er={sqrt(sum([x**2 for x in tmp_error])):4.3}\ns/n={0.5*step*ext*sum(data_bars[1])/sqrt(sum([x**2 for x in tmp_error])):4.3}"""
-                plt.text(x=600, y=max(original_y) * 0.5, s=text, fontdict=font, bbox=box)
+                plt.text(x=100, y=max(original_y) * 0.5, s=text, fontdict=font, bbox=box)
             plt.legend()
             k += 1
             plt.subplots_adjust(
@@ -236,10 +197,10 @@ def build(
 
 if __name__ == "__main__":
     build(
-        sigma=0.3,
-        number_of_trials=3,
-        profiles="profiles_1",
+        sigma=0.1,
+        number_of_trials=33,
+        profiles="profiles_2",
         dataset="dataset_3_csv",
-        num_max=1,
-        method=2,
+        num_max=3,
+        method=1,
     )
