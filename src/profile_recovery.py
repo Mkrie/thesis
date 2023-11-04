@@ -1,7 +1,7 @@
 import csv
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any
 
 import matplotlib.pyplot as plt
 
@@ -19,7 +19,7 @@ class ProfileRec:
     dataset_name: str = "dataset_2_csv"
 
     @staticmethod
-    def generate_restrictions(k: list[int], n: int):
+    def generate_restrictions(k: list[int], n: int) -> list[int]:
         restrictions = []
         if len(k) == 1:
             restrictions.append([tuple([0] + [0] * m + [1, -1] + [0] * (n - m - 2))
@@ -44,10 +44,10 @@ class ProfileRec:
                                     matrix_a: list[tuple[float]],
                                     obj: list[int],
                                     bnd: tuple[tuple[int, Any]],
-                                    k: list[int]):
+                                    k: list[int]) -> scipy.optimize.OptimizeResult:
         """Solution at a certain maximum."""
         l_restrictions = ProfileRec.generate_restrictions(k=k, n=n)
-        lhs_ineq: list[tuple[int], ...] = (
+        lhs_ineq: list[tuple[int], Any] = (
             [[-1, *list(map(lambda x: -x, line))] for line in matrix_a]
             + [[-1, *line] for line in matrix_a])
         sum_len: int = 0
@@ -135,13 +135,13 @@ class ProfileRec:
         matrix_a: list[tuple] = list()
         heights: list[float] = tuple()
         for txt_path in sorted(path_to_dataset_csv.glob("*.csv")):
-            with open(txt_path, "r") as csv_file:
-                reader = csv.reader(csv_file)
-                matrix_a.append(tuple(float(line[1]) for line in reader)[:n])
+            with open(txt_path, "r") as csv_file_1:
+                reader_1 = csv.reader(csv_file_1)
+                matrix_a.append(tuple(float(line[1]) for line in reader_1)[:n])
         for txt_path in sorted(path_to_dataset_csv.glob("*.csv")):
-            with open(txt_path, "r") as csv_file:
-                reader = csv.reader(csv_file)
-                heights: tuple[float] = tuple(float(line[0]) * 10**3 for line in reader)[:n]
+            with open(txt_path, "r") as csv_file_2:
+                reader_2 = csv.reader(csv_file_2)
+                heights: tuple[float] = tuple(float(line[0]) * 10**3 for line in reader_2)[:n]
             break
         return heights, matrix_a
 
