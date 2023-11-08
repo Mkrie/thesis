@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-@dataclass
+@dataclass(frozen=True)
 class Msbgraph:
     """Converts data to csv."""
 
@@ -14,8 +14,8 @@ class Msbgraph:
 
     def convert_all_files_to_csv(self) -> None:
         """Convert all files in dataset to csv."""
-        path_to_data = Path(Path(__file__).parents[1], "data")
-        path_to_csv = Path(path_to_data, f"{self.dataset_name}_csv")
+        path_to_data: Path = Path(Path(__file__).parents[1], "data")
+        path_to_csv: Path = Path(path_to_data, f"{self.dataset_name}_csv")
         if path_to_csv.is_dir():
             shutil.rmtree(str(path_to_csv), ignore_errors=True)
         path_to_csv.mkdir()
@@ -28,7 +28,9 @@ class Msbgraph:
                     writer.writerows(
                         tuple(
                             tuple(line.split("\t")[:2])
-                            for line in file.readlines()[self.begin_f : self.end_f]
+                            for line in file.readlines()[
+                                self.begin_f : self.end_f
+                            ]
                         )
                     )
 

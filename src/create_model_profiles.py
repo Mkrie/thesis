@@ -2,7 +2,10 @@ import csv
 from pathlib import Path
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_1.csv"), "w"
+    Path(
+        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_1.csv"
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -14,7 +17,10 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_2.csv"), "w"
+    Path(
+        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_2.csv"
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -26,7 +32,9 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_3.csv"),
+    Path(
+        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_3.csv"
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -40,7 +48,10 @@ with open(
 
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_4.csv"), "w"
+    Path(
+        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_4.csv"
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -52,7 +63,10 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_5.csv"), "w"
+    Path(
+        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_5.csv"
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -64,7 +78,9 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_6.csv"),
+    Path(
+        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_6.csv"
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -77,7 +93,14 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_1_1.csv"), "w"
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod_1_1.csv",
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -89,7 +112,14 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_2_1.csv"), "w"
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod_2_1.csv",
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -101,7 +131,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_3_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod_3_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -115,7 +151,14 @@ with open(
 
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_4_1.csv"), "w"
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod_4_1.csv",
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -127,7 +170,14 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_5_1.csv"), "w"
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod_5_1.csv",
+    ),
+    "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
     h: int = 1500
@@ -139,7 +189,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod_6_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod_6_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -152,7 +208,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -167,7 +229,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_2.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_2.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -182,7 +250,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_3.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_3.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -197,7 +271,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_4.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_4.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -212,7 +292,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_1_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_1_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -227,7 +313,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_2_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_2_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -242,7 +334,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_3_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_3_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -257,7 +355,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "threemod_4_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "threemod_4_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -272,7 +376,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod500big_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod500big_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -285,7 +395,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod500big_2.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod500big_2.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -298,7 +414,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod500big_3.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod500big_3.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -312,7 +434,11 @@ with open(
 
 with open(
     Path(
-        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod500big_1_1.csv"
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod500big_1_1.csv",
     ),
     "w",
 ) as csv_file:
@@ -327,7 +453,11 @@ with open(
 
 with open(
     Path(
-        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod500big_2_1.csv"
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod500big_2_1.csv",
     ),
     "w",
 ) as csv_file:
@@ -342,7 +472,11 @@ with open(
 
 with open(
     Path(
-        Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod500big_3_1.csv"
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod500big_3_1.csv",
     ),
     "w",
 ) as csv_file:
@@ -356,7 +490,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod1000big_1.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod1000big_1.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -369,7 +509,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod1000big_2.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod1000big_2.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)
@@ -382,7 +528,13 @@ with open(
         h -= 1
 
 with open(
-    Path(Path(__file__).parents[1], "data", "profiles_2", "csv", "unimod1000big_3.csv"),
+    Path(
+        Path(__file__).parents[1],
+        "data",
+        "profiles_2",
+        "csv",
+        "unimod1000big_3.csv",
+    ),
     "w",
 ) as csv_file:
     writer = csv.writer(csv_file)

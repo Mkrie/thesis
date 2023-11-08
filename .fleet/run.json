@@ -3,7 +3,7 @@
         {
             "type": "python",
             "name": "Python configuration",
-            "file": "scripts/bayesan.py",
+            "file": "$PROJECT_DIR$/src/direct_measurements.py",
             "arguments": [],
         },
         

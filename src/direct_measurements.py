@@ -18,13 +18,17 @@ class DirectMeasurements:
         """Averaging over an interval."""
         sum_n: float = 0
         for i in range(len(list_h) - 1):
-            sum_n += 0.5 * (list_h[i] - list_h[i + 1]) * (list_n[i] + list_n[i + 1])
+            sum_n += (
+                0.5 * (list_h[i] - list_h[i + 1]) * (list_n[i] + list_n[i + 1])
+            )
         return sum_n / (list_h[0] - list_h[-1])
 
     @staticmethod
-    def generate_bars(heights: tuple[Union[float, Any], ...],
-                      p_x: tuple[float],
-                      p_y: tuple[float]) -> tuple[list[float], list[float]]:
+    def generate_bars(
+        heights: tuple[Union[float, Any], ...],
+        p_x: tuple[float],
+        p_y: tuple[float],
+    ) -> tuple[list[float], list[float]]:
         """Creating a histogram (averaging at 50m)."""
         fin_h: list[float] = []
         fin_n: list[float] = []
@@ -39,35 +43,45 @@ class DirectMeasurements:
             fin_h.append(keys[h])
             fin_n.append(
                 DirectMeasurements.integrate(
-                    list_h=p_x[dict_index[keys[h + 1]]: dict_index[keys[h]]],
-                    list_n=p_y[dict_index[keys[h + 1]]: dict_index[keys[h]]],
+                    list_h=p_x[dict_index[keys[h + 1]] : dict_index[keys[h]]],
+                    list_n=p_y[dict_index[keys[h + 1]] : dict_index[keys[h]]],
                 )
             )
         return fin_h, fin_n
 
     def integration(self, dataset: str) -> float:
         """Calculate direct measurement via integration."""
-        path_to_dataset_csv: Path = Path(Path(__file__).parents[1], "data", self.dataset_name)
+        path_to_dataset_csv: Path = Path(
+            Path(__file__).parents[1], "data", self.dataset_name
+        )
 
         with open(Path(path_to_dataset_csv, dataset)) as csv_file:
             reader: csv.reader = csv.reader(csv_file)
-            msb_tup = tuple(map(lambda x: (float(x[0]) * 10**3, float(x[1])), reader))
+            msb_tup = tuple(
+                map(lambda x: (float(x[0]) * 10**3, float(x[1])), reader)
+            )
 
-        path_to_profile_csv = Path(Path(__file__).parents[1], "data", self.dir_profiles_name, "csv")
+        path_to_profile_csv = Path(
+            Path(__file__).parents[1], "data", self.dir_profiles_name, "csv"
+        )
         with open(Path(path_to_profile_csv, self.profile)) as csv_file:
             reader: csv.reader = csv.reader(csv_file)
             tup_coords: tuple[tuple[str]] = tuple(reader)
             original_x: tuple[float] = tuple(float(x[0]) for x in tup_coords)
             original_y: tuple[float] = tuple(float(x[1]) for x in tup_coords)
             data_bars = self.generate_bars(
-                heights=tuple(x[0] for x in msb_tup[:21]), p_x=original_x, p_y=original_y
+                heights=tuple(x[0] for x in msb_tup[:21]),
+                p_x=original_x,
+                p_y=original_y,
             )
         return (
             sum(tuple(msb_tup[i][1] * data_bars[1][i] * 50 for i in range(20)))
             + self.sigma * 10**13 * np.random.randn(1)[0]
         )
 
-    def direct_measurements_for_profile(self) -> tuple[tuple[float, float], ...]:
+    def direct_measurements_for_profile(
+        self,
+    ) -> tuple[tuple[float, float], ...]:
         """Direct measurements for a specific profile."""
         path_to_dataset_csv: Path = Path(
             Path(__file__).parents[1], "data", self.dataset_name
@@ -77,7 +91,9 @@ class DirectMeasurements:
             for_prof_calc.append(
                 (
                     float(
-                        txt_path.name.replace("msbgraf_", "").replace(".csv", "").replace("_", ".")
+                        txt_path.name.replace("msbgraf_", "")
+                        .replace(".csv", "")
+                        .replace("_", ".")
                     ),
                     self.integration(txt_path.name),
                 )

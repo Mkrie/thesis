@@ -5,20 +5,23 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 
-@dataclass
+@dataclass(frozen=True)
 class PrepareProfile:
     profiles_name: str
 
-    def cleaning(self, profile_name: str) -> list[tuple[float]]:
+    def cleaning(self, profile_name: str) -> list[tuple[float, float]]:
         """Noise removal and image output."""
         coef: float = 2.46 * 10**10
-        list_coords: list[tuple[float]] = []
-        path_to_profiles = Path(Path(__file__).parents[1], "data", self.profiles_name)
+        list_coords: list[tuple[float, float]] = list()
+        path_to_profiles = Path(
+            Path(__file__).parents[1], "data", self.profiles_name
+        )
+
         image = Image.open(Path(path_to_profiles, profile_name))
+        pix = image.load()
         draw = ImageDraw.Draw(image)
         width: int = image.size[0]
         height: int = image.size[1]
-        pix = image.load()
 
         for i in range(height):
             for j in range(width):
@@ -39,7 +42,7 @@ class PrepareProfile:
                         draw.point((k, i), (255, 255, 255))
                     break
 
-        path_to_clean_profile = Path(path_to_profiles, "clean")
+        path_to_clean_profile: Path = Path(path_to_profiles, "clean")
         if not path_to_clean_profile.is_dir():
             path_to_clean_profile.mkdir()
 
@@ -61,10 +64,14 @@ class PrepareProfile:
 
 
 if __name__ == "__main__":
-    profile_1 = PrepareProfile("profiles_1")
-    list_coords: list[tuple[float]] = profile_1.cleaning("profile_18_04.png")
-    for txt_path in Path(Path(__file__).parents[1], "data", "profiles_1").glob("*.png"):
+    profile_1: PrepareProfile = PrepareProfile("profiles_1")
+    list_coords_out: list[tuple[float, float]] = profile_1.cleaning(
+        "profile_18_04.png"
+    )
+    for txt_path in Path(Path(__file__).parents[1], "data", "profiles_1").glob(
+        "*.png"
+    ):
         if txt_path.name != "profiles.png":
-            list_coords: list[tuple[float]] = profile_1.cleaning(txt_path.name)
-    # plt.plot(tuple(x[0] for x in list_coords), tuple(x[1] for x in list_coords))
-    # plt.show()
+            list_coords_out: list[tuple[float, float]] = profile_1.cleaning(
+                txt_path.name
+            )

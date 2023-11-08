@@ -5,4 +5,7 @@
 *.loc
 thesis_env/
 .idea
+.fleet
+.mypy_cache
+.ruff_cache
 notebooks/.ipynb_checkpoints
