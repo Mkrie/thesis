@@ -1,10 +1,10 @@
 def build(
-        sigma: float,
-        number_of_trials: int,
-        profiles: str,
-        dataset: str,
-        num_max: int,
-        method: int = 1,
+    sigma: float,
+    number_of_trials: int,
+    profiles: str,
+    dataset: str,
+    num_max: int,
+    method: int = 1,
 ) -> None:
     path_to_profiles = Path(Path(__file__).parents[1], "data", profiles, "csv")
     for txt_path in sorted(list(path_to_profiles.glob("*.csv"))):
@@ -114,10 +114,10 @@ def build(
                             list_discrepancy.append(
                                 (
                                     rec[0][res_i],
-                                            sqrt(
-                                                (rec[1][res_i] - original_y[orig_i])
-                                                ** 2
-                                            ),
+                                    sqrt(
+                                        (rec[1][res_i] - original_y[orig_i])
+                                        ** 2
+                                    ),
                                 )
                             )
                             break

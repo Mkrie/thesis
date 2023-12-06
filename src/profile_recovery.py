@@ -129,7 +129,7 @@ class ProfileRec:
             for k in range(1, n):
                 opt: scipy.optimize.OptimizeResult = (
                     self.solution_at_certain_maximum(
-                        xi=xi, n=n, matrix_a=matrix_a, obj=obj, bnd=bnd, k=k
+                        xi=xi, n=n, matrix_a=matrix_a, obj=obj, bnd=bnd, k=[k]
                     )
                 )
                 if opt.success:
