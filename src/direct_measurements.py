@@ -102,6 +102,8 @@ class DirectMeasurements:
 
 
 if __name__ == "__main__":
-    dir_meas = DirectMeasurements("threemod_2.csv", 0)
+    dir_meas = DirectMeasurements("threemod_2.csv", 1)
+    meas = dir_meas.direct_measurements_for_profile()
+    print(meas)
     meas = dir_meas.direct_measurements_for_profile()
     print(meas)

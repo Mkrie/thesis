@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import scipy
 from scipy.optimize import linprog
 
-from direct_measurements import DirectMeasurements
+from src.direct_measurements import DirectMeasurements
 
 
 @dataclass
@@ -191,7 +191,7 @@ if __name__ == "__main__":
         profile_path="profiles_1",
         dataset_name="dataset_3_csv",
     )
-    rec = prof_recovery.linear_programming(n_max=2, sigma=0)
+    rec = prof_recovery.linear_programming(n_max=2, sigma=100)
     print(rec)
     plt.plot(rec[0], rec[1])
     path_to_profiles = Path(

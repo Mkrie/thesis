@@ -5,8 +5,8 @@ from dataclasses import dataclass
 import numpy as np
 from numpy import dtype, floating, ndarray
 
-from direct_measurements import DirectMeasurements
-from profile_recovery import ProfileRec
+from src.direct_measurements import DirectMeasurements
+from src.profile_recovery import ProfileRec
 
 
 @dataclass(frozen=True)
