@@ -33,4 +33,4 @@
 ##### Установка зависимостей
 ```pip install -r requirements.txt```
 ##### Codestyle
-```black .```('pyproject.toml' конфигурирует максимальную длину строк)
+```black .``` ('pyproject.toml' конфигурирует максимальную длину строк)
