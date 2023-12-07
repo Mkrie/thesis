@@ -1,6 +1,6 @@
 import math
-from typing import Any, Union
 from dataclasses import dataclass
+from typing import Any, Union
 
 import numpy as np
 from numpy import dtype, floating, ndarray

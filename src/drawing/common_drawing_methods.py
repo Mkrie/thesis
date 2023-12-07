@@ -1,13 +1,10 @@
 import csv
-
 from dataclasses import dataclass
 from pathlib import Path
-
 
 import matplotlib.pyplot as plt
 
 from src.direct_measurements import DirectMeasurements
-
 
 dict_profile_time = {
     ("06", "42"): "PM004A",

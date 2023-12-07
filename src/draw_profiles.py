@@ -1,9 +1,7 @@
 from dataclasses import dataclass
 
-import matplotlib.pyplot as plt
-
-from src.drawing.draw_ose import DrawOSE
 from src.drawing.draw_linear_prog import DrawLinearProg
+from src.drawing.draw_ose import DrawOSE
 
 dict_profile_time = {
     ("06", "42"): "PM004A",

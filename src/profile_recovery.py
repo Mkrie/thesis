@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any, Union
 
 import matplotlib.pyplot as plt
-
 import scipy
 from scipy.optimize import linprog
 

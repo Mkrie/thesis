@@ -1,15 +1,15 @@
-from datetime import datetime
 import json
-from typing import Any, Union
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
+from typing import Any, Union
 
+import matplotlib.pyplot as plt
 import numpy as np
 from numpy import ndarray, dtype, floating
-import matplotlib.pyplot as plt
 
-from src.profile_recovery import ProfileRec
 from src.drawing.common_drawing_methods import CommonDrawingMethods
+from src.profile_recovery import ProfileRec
 
 dict_profile_time = {
     ("06", "42"): "PM004A",
