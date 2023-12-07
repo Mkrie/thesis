@@ -36,7 +36,6 @@ class Bayesian(object):
                 ]
                 for i in range(n)
             ],
-            dtype=floating,
         )
 
     @staticmethod
@@ -117,5 +116,7 @@ if __name__ == "__main__":
         profile_path="profiles_2",
         dataset_name="dataset_2_csv",
     )
-    h_out, out = e.assessment(sigma_1=0.1, n=21, sigma_2=0.1, factor=10**13)
+    h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10**13)
+    print(h_out, out)
+    h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10 ** 13)
     print(h_out, out)

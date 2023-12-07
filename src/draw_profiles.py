@@ -31,14 +31,77 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
     dir_profiles_name: str = "profiles_2"
     n_trials: int = 10
 
+    def calculate_pipeline(self, pipeline) -> None:
+        for calc in pipeline:
+            if "sigma_2" in calc.keys() and self.dataset_name != "dataset_3_csv":
+                folder_name: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
+                self.draw_ose(
+                    self.make_all_necessary_calculations_for_ose(
+                        sigma_1=calc.get("sigma_1"), sigma_2=calc.get("sigma_2")
+                    ),
+                    folder_name=folder_name,
+                )
+            elif "sigma_2" not in calc.keys() and self.dataset_name == "dataset_3_csv":
+                folder_name: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},num_max={calc.get('num_max')}"
+                self.draw_linear_prog(
+                    self.make_all_necessary_calculations_for_linear_prog(
+                        num_max=calc.get("num_max"),
+                        sigma_1=calc.get("sigma_1"),
+                    ),
+                    folder_name=folder_name,
+                )
+
 
 if __name__ == "__main__":
-    obj = DrawProfiles(
-        dataset_name="dataset_3_csv",
-        dir_profiles_name="profiles_1",
-        n_trials=30,
-    )
-    # obj.draw_ose(obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0))
-    obj.draw_linear_prog(obj.make_all_necessary_calculations_for_linear_prog(num_max=1,
-                                                                             sigma_1=1))
-    # plt.show()
+    n_trials = 13
+    list_profiles_datasets = [
+        {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_1"},
+        {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_2"},
+        {"dataset_name": "dataset_2_csv", "dir_profiles_name": "profiles_1"},
+        {"dataset_name": "dataset_2_csv", "dir_profiles_name": "profiles_2"},
+    ]
+    list_dictionary_of_calculations = [
+        {
+            "sigma_1": 0,
+            "sigma_2": 0,
+        },
+        {
+            "sigma_1": 0.000001,
+            "sigma_2": 0.000001,
+        },
+        {
+            "sigma_1": 0.0001,
+            "sigma_2": 0.0001,
+        },
+        {
+            "sigma_1": 0.01,
+            "sigma_2": 0.01,
+        },
+        {
+            "sigma_1": 0.1,
+            "sigma_2": 0.1,
+        },
+        {
+            "sigma_1": 0.1,
+            "num_max": 1,
+        },
+        {
+            "sigma_1": 0.3,
+            "num_max": 1,
+        },
+        {
+            "sigma_1": 0.1,
+            "num_max": 2,
+        },
+        {
+            "sigma_1": 0.3,
+            "num_max": 2,
+        },
+    ]
+    for p_d in list_profiles_datasets:
+        obj = DrawProfiles(
+            dataset_name=p_d["dataset_name"],
+            dir_profiles_name=p_d["dir_profiles_name"],
+            n_trials=n_trials,
+        )
+        obj.calculate_pipeline(pipeline=list_dictionary_of_calculations)

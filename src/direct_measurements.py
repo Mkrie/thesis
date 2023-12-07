@@ -83,6 +83,7 @@ class DirectMeasurements:
         self,
     ) -> tuple[tuple[float, float], ...]:
         """Direct measurements for a specific profile."""
+        # print(self.sigma)
         path_to_dataset_csv: Path = Path(
             Path(__file__).parents[1], "data", self.dataset_name
         )

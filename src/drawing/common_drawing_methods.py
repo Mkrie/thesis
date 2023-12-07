@@ -35,9 +35,8 @@ class CommonDrawingMethods(object):
     dir_profiles_name: str = "profiles_2"
     n_trials: int = 10
 
-
     def general_chart_settings(
-        self, sigma_1: float, txt_path: Path, name_height: dict[str, str]
+        self, info: list[float], name_height: dict[str, str]
     ) -> None:
         plt.legend()
         plt.minorticks_on()
@@ -46,12 +45,9 @@ class CommonDrawingMethods(object):
         plt.xlim(0, 1000)
         plt.xlabel("h[m]")
         plt.ylabel(r"$n$ [$cm^{-3}$]")
-        if self.dir_profiles_name == "profiles_2":
-            plt.title(
-                f"error = {sigma_1}*10^15, {name_height.get(txt_path.name)}"
-            )
-        else:
-            plt.title(str(txt_path).split("/")[-1])
+        plt.title(
+            f"int_mean={info[0]:4.4e},int_std={info[1]:4.4e},int_orig={info[2]:4.4e}"
+        )
 
     def get_data_for_original_profile(
         self, path_to_profile_csv: Path, txt_path_name: str, sigma_1: float
@@ -74,4 +70,3 @@ class CommonDrawingMethods(object):
                 p_y=tuple(float(x[1]) for x in tup_coords),
             )
         return data_bars
-

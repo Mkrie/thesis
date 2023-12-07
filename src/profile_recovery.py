@@ -83,9 +83,7 @@ class ProfileRec:
             lhs_ineq += restriction
             sum_len += len(restriction)
         rhs_ineq: list[float] = [-x for x in xi] + list(xi) + [0] * sum_len
-        return linprog(
-            method="highs", c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq, bounds=bnd
-        )
+        return linprog(method="highs", c=obj, A_ub=lhs_ineq, b_ub=rhs_ineq)
 
     def linear_programming(
         self, n_max: int, sigma: float, dir_meas_obj=None
@@ -112,7 +110,7 @@ class ProfileRec:
         matrix_a: list[tuple[float]] = make_data_out[1]
         obj: tuple[Union[int, Any], ...] = tuple([1, *[0] * n])
         bnd: tuple[tuple[int, float], ...] = tuple(
-            (0, float("inf")) for _ in range(n + 1)
+            [(0, float("inf")) for _ in range(n + 1)]
         )
         z_min: float = 10**100
         k: list[int] = list()
@@ -191,8 +189,12 @@ if __name__ == "__main__":
         profile_path="profiles_1",
         dataset_name="dataset_3_csv",
     )
-    rec = prof_recovery.linear_programming(n_max=2, sigma=100)
-    print(rec)
+    for _ in range(20):
+        rec = prof_recovery.linear_programming(n_max=1, sigma=1)
+        for x in rec[1]:
+            if x < 0:
+                print("NEGATIIIVE!!!!!!!!!!")
+        print(rec)
     plt.plot(rec[0], rec[1])
     path_to_profiles = Path(
         Path(__file__).parents[1], "data", "profiles_1", "csv"

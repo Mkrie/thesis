@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from typing import Any, Union
 from dataclasses import dataclass
@@ -40,17 +41,22 @@ class DrawOSE(CommonDrawingMethods):
     def calculate_factor(data_bars: tuple[list[float], list[float]]) -> float:
         """Calculate factor for priore profile"""
         integral = sum(data_bars[1]) * (data_bars[0][1] - data_bars[0][0])
-        print(integral)
         return integral / (max(data_bars[0]) - min(data_bars[0]))
 
-    def draw_ose(
-        self,
-        out_results
-    ) -> None:
+    def draw_ose(self, out_results, folder_name: str) -> None:
         """Draw the profile reconstructed using optimal statistical estimation."""
+        path_out: Path = Path(Path.cwd().parent, "output", folder_name)
+        path_out.mkdir(parents=True, exist_ok=True)
+        for path_txt in path_out.glob("*.png"):
+            try:
+                path_txt.unlink()
+            except OSError:
+                ...
         for key in out_results.keys():
             h: ndarray[Any, dtype[floating]] = out_results[key][0]
-            out: tuple[Union[ndarray[Any, dtype[floating]], Any]] = out_results[key][1]
+            out: tuple[
+                Union[ndarray[Any, dtype[floating]], Any]
+            ] = out_results[key][1]
             data_bars: tuple[list[float], list[float]] = out_results[key][2]
             out_avg: ndarray[Any, dtype[floating]] = out_results[key][3]
             out_er: ndarray[Any, dtype[floating]] = out_results[key][4]
@@ -58,6 +64,9 @@ class DrawOSE(CommonDrawingMethods):
             txt_path: Path = out_results[key][6]
             name_height: dict[str, str] = out_results[key][7]
             factor: float = out_results[key][8]
+            integral_mean: float = out_results[key][9]
+            integral_std: float = out_results[key][10]
+            integral_orig: float = out_results[key][11]
             plt.bar(
                 x=[x_i + 25 for x_i in h],
                 height=[h_i for h_i in out[0]],
@@ -78,7 +87,7 @@ class DrawOSE(CommonDrawingMethods):
                 alpha=0.5,
                 color="blue",
                 linestyle="-",
-                label="ose:original profile",
+                label="original profile",
             )
             plt.errorbar(
                 x=[x_i + 25 for x_i in h],
@@ -103,11 +112,16 @@ class DrawOSE(CommonDrawingMethods):
                 label="ose:prior profile",
             )
             self.general_chart_settings(
-                sigma_1=sigma_1, txt_path=txt_path, name_height=name_height
+                info=[integral_mean, integral_std, integral_orig],
+                name_height=name_height,
+            )
+            print(f"ose:{txt_path.name}, {datetime.now()}")
+            plt.savefig(
+                Path(path_out, f'{key.split(".")[0]}.png'), bbox_inches="tight"
             )
             plt.figure()
-        plt.rcParams["font.size"] = "16"
-        plt.show()
+        # plt.rcParams["font.size"] = "16"
+        # plt.show()
 
     def calculate_average_and_error_ose(
         self, sigma_1: float, sigma_2: float, factor: float, txt_path: Path
@@ -132,7 +146,16 @@ class DrawOSE(CommonDrawingMethods):
                 factor=factor,
             )
             out_sum.append(tuple(out[0]))
-        return h, out, np.array(out_sum).mean(0), np.array(out_sum).std(0)
+            # for const
+            integrals: float = 50 * np.array(out_sum).sum(axis=1)
+        return (
+            h,
+            out,
+            np.array(out_sum).mean(0),
+            np.array(out_sum).std(0),
+            float(integrals.mean(axis=0)),
+            float(integrals.std(axis=0)),
+        )
 
     def make_all_necessary_calculations_for_ose(
         self, sigma_1: float, sigma_2: float
@@ -154,21 +177,36 @@ class DrawOSE(CommonDrawingMethods):
                 sigma_1=sigma_1,
             )
             factor: float = DrawOSE.calculate_factor(data_bars)
-            h, out, out_avg, out_er = self.calculate_average_and_error_ose(
+            integral_orig: float = 50 * sum(data_bars[1])
+            (
+                h,
+                out,
+                out_avg,
+                out_er,
+                integral_mean,
+                integral_std,
+            ) = self.calculate_average_and_error_ose(
                 sigma_1=sigma_1,
                 sigma_2=sigma_2,
                 factor=factor,
                 txt_path=txt_path,
             )
-            out_results[txt_path.name] = tuple([h,
-                                                out,
-                                                data_bars,
-                                                out_avg,
-                                                out_er,
-                                                sigma_1,
-                                                txt_path,
-                                                name_height,
-                                                factor])
+            out_results[txt_path.name] = tuple(
+                [
+                    h,
+                    out,
+                    data_bars,
+                    out_avg,
+                    out_er,
+                    sigma_1,
+                    txt_path,
+                    name_height,
+                    factor,
+                    integral_mean,
+                    integral_std,
+                    integral_orig,
+                ]
+            )
             # break
         return out_results
 
@@ -179,6 +217,8 @@ if __name__ == "__main__":
         dir_profiles_name="profiles_1",
         n_trials=30,
     )
-    obj.draw_ose(obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0))
+    obj.draw_ose(
+        obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0)
+    )
     # obj.draw_linear_prog(obj.make_all_necessary_calculations_for_linear_prog(num_max=1,
     #                                                                          sigma_1=1))

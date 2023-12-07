@@ -1,4 +1,4 @@
-import csv
+from datetime import datetime
 import json
 from typing import Any, Union
 from dataclasses import dataclass
@@ -44,9 +44,9 @@ class DrawLinearProg(CommonDrawingMethods):
     dir_profiles_name: str = "profiles_2"
     n_trials: int = 10
 
-    def calculate_average_and_error_linear_prog(self, sigma_1: float,
-                                                txt_path: Path,
-                                                num_max: int):
+    def calculate_average_and_error_linear_prog(
+        self, sigma_1: float, txt_path: Path, num_max: int
+    ):
         """Calculate the average and error for linear programming."""
         out_sum = []
         for _ in range(self.n_trials):
@@ -55,15 +55,24 @@ class DrawLinearProg(CommonDrawingMethods):
                 profile_path=self.dir_profiles_name,
                 dataset_name=self.dataset_name,
             )
-            h, out, _ = prof_recovery.linear_programming(n_max=num_max,
-                                                         sigma=sigma_1)
+            h, out, _ = prof_recovery.linear_programming(
+                n_max=num_max, sigma=sigma_1
+            )
             out_sum.append(tuple(out))
-        print(out_sum)
-        return h, out, np.array(out_sum).mean(0), np.array(out_sum).std(0)
+        # for const
+        integrals: float = 50 * np.array(out_sum).sum(axis=1)
+        return (
+            h,
+            out,
+            np.array(out_sum).mean(axis=0),
+            np.array(out_sum).std(axis=0),
+            float(integrals.mean(axis=0)),
+            float(integrals.std(axis=0)),
+        )
 
-    def make_all_necessary_calculations_for_linear_prog(self,
-                                                        num_max: int,
-                                                        sigma_1: float):
+    def make_all_necessary_calculations_for_linear_prog(
+        self, num_max: int, sigma_1: float
+    ):
         """Make all the necessary calculations for recovery using linear programming."""
         path_to_profile_csv: Path = Path(
             Path.cwd().parent, "data", self.dir_profiles_name, "csv"
@@ -82,39 +91,61 @@ class DrawLinearProg(CommonDrawingMethods):
                 txt_path_name=txt_path.name,
                 sigma_1=sigma_1,
             )
-            h, out, out_avg, out_er = self.calculate_average_and_error_linear_prog(sigma_1=sigma_1,
-                                                                                   txt_path=txt_path,
-                                                                                   num_max=num_max)
-            out_results[txt_path.name] = tuple([txt_path,
-                                                h,
-                                                out,
-                                                out_avg,
-                                                out_er,
-                                                data_bars,
-                                                sigma_1,
-                                                num_max,
-                                                name_height])
-            break
+            integral_orig: float = 50 * sum(data_bars[1])
+            (
+                h,
+                out,
+                out_avg,
+                out_er,
+                integral_mean,
+                integral_std,
+            ) = self.calculate_average_and_error_linear_prog(
+                sigma_1=sigma_1, txt_path=txt_path, num_max=num_max
+            )
+            out_results[txt_path.name] = tuple(
+                [
+                    txt_path,
+                    h,
+                    out,
+                    out_avg,
+                    out_er,
+                    data_bars,
+                    sigma_1,
+                    num_max,
+                    name_height,
+                    integral_mean,
+                    integral_std,
+                    integral_orig,
+                ]
+            )
+            print(f"lin_prog:{txt_path.name}, {datetime.now()}")
+            # break
         return out_results
 
-    def draw_linear_prog(self, out_results):
+    def draw_linear_prog(self, out_results, folder_name: str) -> None:
         """Draw the profile reconstructed using linear programming."""
-        path: Path = Path(Path.cwd().parent, "output")
-        try:
-            path.rmdir()
-        except OSError as e:
-            ...
-
+        path_out: Path = Path(Path.cwd().parent, "output", folder_name)
+        path_out.mkdir(parents=True, exist_ok=True)
+        for path_txt in path_out.glob("*.png"):
+            try:
+                path_txt.unlink()
+            except OSError:
+                ...
         for key in out_results.keys():
             txt_path: Path = out_results[key][0]
             h: ndarray[Any, dtype[floating]] = out_results[key][1]
-            out: tuple[Union[ndarray[Any, dtype[floating]], Any]] = out_results[key][2]
+            out: tuple[
+                Union[ndarray[Any, dtype[floating]], Any]
+            ] = out_results[key][2]
             out_avg: ndarray[Any, dtype[floating]] = out_results[key][3]
             out_er: ndarray[Any, dtype[floating]] = out_results[key][4]
             data_bars: tuple[list[float], list[float]] = out_results[key][5]
             sigma_1: float = out_results[key][6]
             num_max: int = out_results[key][7]
             name_height: dict[str, str] = out_results[key][8]
+            integral_mean: float = out_results[key][9]
+            integral_std: float = out_results[key][10]
+            integral_orig: float = out_results[key][11]
             plt.bar(
                 x=[x_i + 25 for x_i in h],
                 height=[h_i for h_i in out],
@@ -135,7 +166,7 @@ class DrawLinearProg(CommonDrawingMethods):
                 alpha=0.5,
                 color="blue",
                 linestyle="-",
-                label="ose:original profile",
+                label="original profile",
             )
             plt.errorbar(
                 x=[x_i + 25 for x_i in h],
@@ -146,16 +177,17 @@ class DrawLinearProg(CommonDrawingMethods):
                 elinewidth=2.5,
                 capsize=4,
                 color="black",
-                label=f"ose:average restored n={self.n_trials}",
+                label=f"linear prog:average restored n={self.n_trials}",
             )
 
             self.general_chart_settings(
-                sigma_1=sigma_1, txt_path=txt_path, name_height=name_height
+                info=[integral_mean, integral_std, integral_orig],
+                name_height=name_height,
             )
-            plt.savefig(Path.cwd().parent, Path(f'{key}.png'), bbox_inches='tight')
+            plt.savefig(
+                Path(path_out, f'{key.split(".")[0]}.png'), bbox_inches="tight"
+            )
             plt.figure()
-        plt.rcParams["font.size"] = "16"
-        # plt.show()
 
 
 if __name__ == "__main__":
@@ -165,5 +197,8 @@ if __name__ == "__main__":
         n_trials=30,
     )
     # obj.draw_ose(obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0))
-    obj.draw_linear_prog(obj.make_all_necessary_calculations_for_linear_prog(num_max=1,
-                                                                             sigma_1=1))
+    obj.draw_linear_prog(
+        obj.make_all_necessary_calculations_for_linear_prog(
+            num_max=1, sigma_1=1
+        )
+    )
