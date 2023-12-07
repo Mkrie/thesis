@@ -33,15 +33,22 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
 
     def calculate_pipeline(self, pipeline) -> None:
         for calc in pipeline:
-            if "sigma_2" in calc.keys() and self.dataset_name != "dataset_3_csv":
+            if (
+                "sigma_2" in calc.keys()
+                and self.dataset_name != "dataset_3_csv"
+            ):
                 folder_name: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
                 self.draw_ose(
                     self.make_all_necessary_calculations_for_ose(
-                        sigma_1=calc.get("sigma_1"), sigma_2=calc.get("sigma_2")
+                        sigma_1=calc.get("sigma_1"),
+                        sigma_2=calc.get("sigma_2"),
                     ),
                     folder_name=folder_name,
                 )
-            elif "sigma_2" not in calc.keys() and self.dataset_name == "dataset_3_csv":
+            elif (
+                "sigma_2" not in calc.keys()
+                and self.dataset_name == "dataset_3_csv"
+            ):
                 folder_name: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},num_max={calc.get('num_max')}"
                 self.draw_linear_prog(
                     self.make_all_necessary_calculations_for_linear_prog(

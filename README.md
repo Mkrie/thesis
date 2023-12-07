@@ -32,3 +32,5 @@
 * [ОСО: sigma_1=1e-06,sigma_2=1e-06](output/profiles_2,sigma_1=1e-06,sigma_2=1e-06)
 ##### Установка зависимостей
 ```pip install -r requirements.txt```
+##### Codestyle
+```black .```('pyproject.toml' конфигурирует максимальную длину строк)

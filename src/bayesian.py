@@ -118,5 +118,5 @@ if __name__ == "__main__":
     )
     h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10**13)
     print(h_out, out)
-    h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10 ** 13)
+    h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10**13)
     print(h_out, out)
