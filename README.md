@@ -1,12 +1,16 @@
 ## Измерительно-вычислительная система для оценки вертикального профиля двуокиси азота в атмосфере
-##### notebooks:
-* [СВ/СЗ оригинальные профили](notebooks/eigenval_eigenvec_orig.ipynb)
-* [СВ/СЗ модельные профили](notebooks/eigenval_eigenvec_model.ipynb)
-* [Оптимальное статистическое оценивание](notebooks/bayesan.ipynb)
+`plan_no2_v1.pdf` - [План по NO_2](plan_no2_v1.pdf)
 ##### scripts:
-* [Прямые измерения(наклонное содержание)](src/direct_measurements.py)
-* [Восстановление профилей](src/profile_recovery.py)
-* [Построить графики](src/build_profiles.py)
+* `src/prepare_profile.py` - [Получение данных реального профиля из изображений](src/prepare_profile.py)
+* `src/msbgraph_to_csv.py` - [Получение датасетов послойных воздушных масс из msbgraph.txt программы МПИ](src/msbgraph_to_csv.py)
+* `src/direct_measurements.py` - [Прямые измерения(наклонное содержание)](src/direct_measurements.py)
+* `src/profile_recovery.py` - [Восстановление методом ЛП](src/profile_recovery.py) (планируется запустить туда и (ОСЦ)[src/bayesian.py] для общности)
+* `src/bayesian.py` - [Восстановление методом ОСЦ](src/bayesian.py)
+* `src/create_dataset_3.py` - [Создание датасета с учётом приземного слоя](src/create_dataset_3.py)
+* `src/draw_profiles.py` - [Построить графики](src/draw_profiles.py)
+* `src/drawing/draw_ose.py` - [Класс для восстановления методом ОСЦ](src/drawing/draw_ose.py) (наследуется в [Построить графики](src/draw_profiles.py))
+* `src/drawing/draw_linear_prog.py` - [Класс для восстановления методом ЛП](src/drawing/draw_linear_prog.py) (наследуется в [Построить графики](src/draw_profiles.py))
+* `src/drawing/common_drawing_methods.py` - [Общие настройки графиков](src/drawing/common_drawing_methods.py) (наследуется в `draw_ose.py` и `draw_linear_prog.py`)
 ##### pdfs:
 * [Восстановление с осреднением: реальные профили, error=$0.1*10^{15}$;n_max=1](pdfs/profiles_1;error=0.1_10^{15};n_max=1.pdf)
 * [Восстановление с осреднением: реальные профили, error=$0.3*10^{15}$;n_max=1](pdfs/profiles_1;error=0.3_10^{15};n_max=1.pdf)
