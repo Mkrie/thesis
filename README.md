@@ -7,7 +7,7 @@
 * `src/profile_recovery.py` - [Восстановление методом ЛП](src/profile_recovery.py) (планируется запустить туда, отнаследовавшись от `src/bayesian.py`, для сохранения логики структуры)
 * `src/bayesian.py` - [Восстановление методом ОСЦ](src/bayesian.py)
 * `src/create_dataset_3.py` - [Создание датасета с учётом приземного слоя](src/create_dataset_3.py)
-* `src/draw_profiles.py` - [Построить графики](src/draw_profiles.py)
+* `src/draw_profiles.py` - [Построение графики](src/draw_profiles.py)
 * `src/drawing/draw_ose.py` - [Класс для восстановления методом ОСЦ](src/drawing/draw_ose.py) (наследуется в `src/drawing/draw_ose.py`)
 * `src/drawing/draw_linear_prog.py` - [Класс для восстановления методом ЛП](src/drawing/draw_linear_prog.py) (наследуется в `src/drawing/draw_ose.py`)
 * `src/drawing/common_drawing_methods.py` - [Общие настройки графиков](src/drawing/common_drawing_methods.py) (наследуется в `draw_ose.py` и `draw_linear_prog.py`)
