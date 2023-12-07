@@ -4,7 +4,7 @@
 * `src/prepare_profile.py` - [Получение данных реального профиля из изображений](src/prepare_profile.py)
 * `src/msbgraph_to_csv.py` - [Получение датасетов послойных воздушных масс из msbgraph.txt программы МПИ](src/msbgraph_to_csv.py)
 * `src/direct_measurements.py` - [Прямые измерения(наклонное содержание)](src/direct_measurements.py)
-* `src/profile_recovery.py` - [Восстановление методом ЛП](src/profile_recovery.py) (планируется запустить туда и (ОСЦ)[src/bayesian.py] для общности)
+* `src/profile_recovery.py` - [Восстановление методом ЛП](src/profile_recovery.py) (планируется запустить туда отнаследовавшись и `src/bayesian.py` для сохранения логики структуры)
 * `src/bayesian.py` - [Восстановление методом ОСЦ](src/bayesian.py)
 * `src/create_dataset_3.py` - [Создание датасета с учётом приземного слоя](src/create_dataset_3.py)
 * `src/draw_profiles.py` - [Построить графики](src/draw_profiles.py)
