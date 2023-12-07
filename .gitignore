@@ -9,3 +9,4 @@ thesis_env/
 .mypy_cache
 .ruff_cache
 notebooks/.ipynb_checkpoints
+/.fleet/
