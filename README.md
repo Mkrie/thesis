@@ -30,3 +30,5 @@
 * [ЛП: sigma_1=0.3,num_max=1](output/profiles_2,sigma_1=0.3,num_max=1)
 * [ЛП: sigma_1=0.3,num_max=2](output/profiles_2,sigma_1=0.3,num_max=2)
 * [ОСО: sigma_1=1e-06,sigma_2=1e-06](output/profiles_2,sigma_1=1e-06,sigma_2=1e-06)
+##### Установка зависимостей
+```pip install -r requirements.txt```
