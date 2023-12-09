@@ -60,24 +60,24 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
 if __name__ == "__main__":
     n_trials = 13
     list_profiles_datasets = [
-        {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_1"},
-        {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_2"},
+        # {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_1"},
+        # {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_2"},
         {"dataset_name": "dataset_2_csv", "dir_profiles_name": "profiles_1"},
         {"dataset_name": "dataset_2_csv", "dir_profiles_name": "profiles_2"},
     ]
     list_dictionary_of_calculations = [
-        {
-            "sigma_1": 0,
-            "sigma_2": 0,
-        },
-        {
-            "sigma_1": 0.000001,
-            "sigma_2": 0.000001,
-        },
-        {
-            "sigma_1": 0.0001,
-            "sigma_2": 0.0001,
-        },
+        # {
+        #     "sigma_1": 0,
+        #     "sigma_2": 0,
+        # },
+        # {
+        #     "sigma_1": 0.000001,
+        #     "sigma_2": 0.000001,
+        # },
+        # {
+        #     "sigma_1": 0.0001,
+        #     "sigma_2": 0.0001,
+        # },
         {
             "sigma_1": 0.01,
             "sigma_2": 0.01,

@@ -41,7 +41,7 @@ class Bayesian(object):
     @staticmethod
     def priori_profile(n: int, factor: float) -> ndarray[Any, dtype]:
         """Priori profile calculation."""
-        return np.array(n * [factor])
+        return np.array(n * [50 * factor])
 
     def assessment(
         self,
@@ -69,6 +69,7 @@ class Bayesian(object):
         f = Bayesian.correlation_function(
             f_0=f_0, h=gotten_data[2], h_0=h_0, n=n
         )
+        # print(f_0)
         return gotten_data[2], (
             f
             @ m.T
@@ -112,11 +113,11 @@ class Bayesian(object):
 
 if __name__ == "__main__":
     e = Bayesian(
-        profile="threemod_1.csv",
-        profile_path="profiles_2",
+        profile="profile_06_42.png",
+        profile_path="profiles_1",
         dataset_name="dataset_2_csv",
     )
     h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10**13)
     print(h_out, out)
-    h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10**13)
-    print(h_out, out)
+    # h_out, out = e.assessment(sigma_1=1, n=21, sigma_2=0.1, factor=10**13)
+    # print(h_out, out)

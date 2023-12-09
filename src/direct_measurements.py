@@ -43,8 +43,8 @@ class DirectMeasurements:
             fin_h.append(keys[h])
             fin_n.append(
                 DirectMeasurements.integrate(
-                    list_h=p_x[dict_index[keys[h + 1]] : dict_index[keys[h]]],
-                    list_n=p_y[dict_index[keys[h + 1]] : dict_index[keys[h]]],
+                    list_h=p_x[dict_index[keys[h + 1]]: dict_index[keys[h]]],
+                    list_n=p_y[dict_index[keys[h + 1]]: dict_index[keys[h]]],
                 )
             )
         return fin_h, fin_n
