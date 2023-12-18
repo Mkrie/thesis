@@ -6,29 +6,13 @@ import matplotlib.pyplot as plt
 
 from src.direct_measurements import DirectMeasurements
 
-dict_profile_time = {
-    ("06", "42"): "PM004A",
-    ("07", "05"): "PM004D",
-    ("07", "37"): "PM005A",
-    ("08", "08"): "PM005D",
-    ("09", "42"): "PM006A",
-    ("10", "13"): "PM006D",
-    ("11", "01"): "PM007A",
-    ("11", "27"): "PM007D",
-    ("13", "06"): "PM008A",
-    ("13", "23"): "PM008D",
-    ("16", "54"): "PM010A",
-    ("17", "17"): "PM010D",
-    ("17", "46"): "PM011A",
-    ("18", "04"): "PM011D",
-}
 
 
 @dataclass
 class CommonDrawingMethods(object):
     """Class with common drawing methods for restoring profiles."""
 
-    dataset_name: str = ("dataset_2_csv",)
+    dataset_name: str = "dataset_2_csv"
     dir_profiles_name: str = "profiles_2"
     n_trials: int = 10
 

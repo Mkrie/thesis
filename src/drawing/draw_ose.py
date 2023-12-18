@@ -1,4 +1,5 @@
 import json
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -11,22 +12,7 @@ from numpy import ndarray, dtype, floating
 from src.bayesian import Bayesian
 from src.drawing.common_drawing_methods import CommonDrawingMethods
 
-dict_profile_time = {
-    ("06", "42"): "PM004A",
-    ("07", "05"): "PM004D",
-    ("07", "37"): "PM005A",
-    ("08", "08"): "PM005D",
-    ("09", "42"): "PM006A",
-    ("10", "13"): "PM006D",
-    ("11", "01"): "PM007A",
-    ("11", "27"): "PM007D",
-    ("13", "06"): "PM008A",
-    ("13", "23"): "PM008D",
-    ("16", "54"): "PM010A",
-    ("17", "17"): "PM010D",
-    ("17", "46"): "PM011A",
-    ("18", "04"): "PM011D",
-}
+
 
 
 @dataclass
@@ -100,17 +86,21 @@ class DrawOSE(CommonDrawingMethods):
                 color="black",
                 label=f"ose:average restored n={self.n_trials}",
             )
-            plt.bar(
-                x=[x_i + 25 for x_i in h],
-                height=len(h) * [factor * 50],
-                width=45,
-                linewidth=3,
-                edgecolor="black",
-                alpha=0.3,
-                color="green",
-                linestyle="-",
-                label="ose:prior profile",
-            )
+            plt.axhline(y=50 * factor,
+                        color='black',
+                        linewidth=2,
+                        label="priori profile")
+            # plt.bar(
+            #     x=[x_i + 25 for x_i in h],
+            #     height=len(h) * [factor * 50],
+            #     width=45,
+            #     linewidth=3,
+            #     edgecolor="black",
+            #     alpha=0.3,
+            #     color="green",
+            #     linestyle="-",
+            #     label="ose:prior profile",
+            # )
             self.general_chart_settings(
                 info=[integral_mean, integral_std, integral_orig],
                 name_height=name_height,
@@ -124,7 +114,7 @@ class DrawOSE(CommonDrawingMethods):
         # plt.show()
 
     def calculate_average_and_error_ose(
-        self, sigma_1: float, sigma_2: float, factor: float, txt_path: Path
+        self, sigma_1: float, sigma_2: float, h_0: int, factor: float, txt_path: Path
     ) -> tuple[
         ndarray[Any, dtype[floating]],
         tuple[Union[ndarray[Any, dtype[floating]], Any]],
@@ -144,10 +134,13 @@ class DrawOSE(CommonDrawingMethods):
                 n=21,
                 sigma_2=sigma_2,
                 factor=factor,
+                h_0=h_0
             )
             out_sum.append(tuple(out[0]))
             # for const
             integrals: float = 50 * np.array(out_sum).sum(axis=1)
+        # print(*out_sum, sep='\n')
+        # sys.exit()
         return (
             h,
             out,
@@ -158,8 +151,8 @@ class DrawOSE(CommonDrawingMethods):
         )
 
     def make_all_necessary_calculations_for_ose(
-        self, sigma_1: float, sigma_2: float
-    ) -> None:
+        self, sigma_1: float, sigma_2: float, h_0: int
+    ):
         path_to_profile_csv: Path = Path(
             Path.cwd().parent, "data", self.dir_profiles_name, "csv"
         )
@@ -171,6 +164,12 @@ class DrawOSE(CommonDrawingMethods):
             name_height: dict[str, str] = json.load(json_file_1)
         out_results = dict()
         for txt_path in path_to_profile_csv.glob("*"):
+            needed_profiles = ["threemod_1.csv",
+                               "threemod_1_1.csv",
+                               "threemod_2.csv",
+                               "threemod_2_1.csv"]
+            if txt_path.name not in needed_profiles:
+                continue
             data_bars = self.get_data_for_original_profile(
                 path_to_profile_csv=path_to_profile_csv,
                 txt_path_name=txt_path.name,
@@ -188,6 +187,7 @@ class DrawOSE(CommonDrawingMethods):
             ) = self.calculate_average_and_error_ose(
                 sigma_1=sigma_1,
                 sigma_2=sigma_2,
+                h_0=h_0,
                 factor=factor,
                 txt_path=txt_path,
             )
@@ -220,5 +220,3 @@ if __name__ == "__main__":
     obj.draw_ose(
         obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0)
     )
-    # obj.draw_linear_prog(obj.make_all_necessary_calculations_for_linear_prog(num_max=1,
-    #                                                                          sigma_1=1))

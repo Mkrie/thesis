@@ -6,7 +6,7 @@ from typing import Union, Any
 import numpy as np
 
 
-@dataclass(frozen=True)
+@dataclass
 class DirectMeasurements:
     profile: str
     sigma: float
@@ -43,8 +43,8 @@ class DirectMeasurements:
             fin_h.append(keys[h])
             fin_n.append(
                 DirectMeasurements.integrate(
-                    list_h=p_x[dict_index[keys[h + 1]]: dict_index[keys[h]]],
-                    list_n=p_y[dict_index[keys[h + 1]]: dict_index[keys[h]]],
+                    list_h=p_x[dict_index[keys[h + 1]] : dict_index[keys[h]]],
+                    list_n=p_y[dict_index[keys[h + 1]] : dict_index[keys[h]]],
                 )
             )
         return fin_h, fin_n
@@ -83,7 +83,6 @@ class DirectMeasurements:
         self,
     ) -> tuple[tuple[float, float], ...]:
         """Direct measurements for a specific profile."""
-        # print(self.sigma)
         path_to_dataset_csv: Path = Path(
             Path(__file__).parents[1], "data", self.dataset_name
         )
@@ -104,7 +103,5 @@ class DirectMeasurements:
 
 if __name__ == "__main__":
     dir_meas = DirectMeasurements("threemod_2.csv", 1)
-    meas = dir_meas.direct_measurements_for_profile()
-    print(meas)
     meas = dir_meas.direct_measurements_for_profile()
     print(meas)

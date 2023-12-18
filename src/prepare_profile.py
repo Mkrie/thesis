@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 
-@dataclass(frozen=True)
+@dataclass
 class PrepareProfile:
     profiles_name: str
 

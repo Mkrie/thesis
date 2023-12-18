@@ -74,9 +74,11 @@ class DrawLinearProg(CommonDrawingMethods):
         self, num_max: int, sigma_1: float
     ):
         """Make all the necessary calculations for recovery using linear programming."""
-        path_to_profile_csv: Path = Path(
-            Path.cwd().parent, "data", self.dir_profiles_name, "csv"
-        )
+        print(sigma_1)
+        path_to_profile_csv: Path = Path(Path.cwd().parent,
+                                         "data",
+                                         self.dir_profiles_name,
+                                         "csv")
         with open(
             Path(Path.cwd().parent, "data", "profiles_2", "profiles_2.json"),
             "r",
@@ -84,6 +86,12 @@ class DrawLinearProg(CommonDrawingMethods):
             name_height: dict[str, str] = json.load(json_file_1)
         out_results = dict()
         for txt_path in path_to_profile_csv.glob("*"):
+            needed_profiles = ["threemod_1.csv",
+                               "threemod_1_1.csv",
+                               "threemod_2.csv",
+                               "threemod_2_1.csv"]
+            if txt_path.name not in needed_profiles:
+                continue
             if txt_path.name == "profile_06_42.csv":
                 continue
             data_bars = self.get_data_for_original_profile(

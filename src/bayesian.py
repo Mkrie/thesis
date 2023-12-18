@@ -9,7 +9,7 @@ from src.direct_measurements import DirectMeasurements
 from src.profile_recovery import ProfileRec
 
 
-@dataclass(frozen=True)
+@dataclass
 class Bayesian(object):
     """Class for solving inverse problems using the optimal statistical estimation method"""
 
@@ -28,7 +28,7 @@ class Bayesian(object):
         return np.array(
             [
                 [
-                    0.25
+                    1
                     * f_0[j]
                     * f_0[i]
                     * (math.e ** (-((h[i] - h[j]) ** 2) / h_0))
@@ -49,7 +49,7 @@ class Bayesian(object):
         n: int,
         sigma_2: float,
         factor: float,
-        h_0: int = 200,
+        h_0: int = 50,
     ) -> tuple[
         ndarray[Any, dtype[floating]],
         tuple[Union[ndarray[Any, dtype[floating]], Any]],
