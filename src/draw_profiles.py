@@ -6,6 +6,7 @@ from typing import Union, Any
 from matplotlib import pyplot as plt
 from numpy import ndarray, dtype, floating
 
+from src.bayesian import Bayesian
 from src.drawing.draw_linear_prog import DrawLinearProg
 from src.drawing.draw_ose import DrawOSE
 
@@ -61,7 +62,7 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
                 )
                 plt.bar(
                     x=[x_i + 25 for x_i in data_bars[0]],
-                    height=[h_i * 50 for h_i in data_bars[1]],
+                    height=[h_i for h_i in data_bars[1]],
                     width=45,
                     linewidth=1,
                     edgecolor="black",
@@ -180,6 +181,8 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
 
     def calculate_pipeline_ose(self, pipeline):
         for calc in pipeline:
+            if "sigma_2" not in calc.keys():
+                continue
             folder_name_ose: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
             out_results_ose_1 = self.make_all_necessary_calculations_for_ose(
                 sigma_1=calc.get("sigma_1"),
@@ -195,6 +198,8 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
 
     def calculate_pipeline_linprog(self, pipeline):
         for calc in pipeline:
+            if "sigma_2" in calc.keys():
+                continue
             folder_name_linprog: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
             out_results_linprog_3 = (
                 self.make_all_necessary_calculations_for_linear_prog(
@@ -211,6 +216,8 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
             out_results_linprog_4,
             folder_name_linprog,
         )
+
+    # def draw_error(self, output_1, output_2):
 
 
 if __name__ == "__main__":
@@ -233,46 +240,46 @@ if __name__ == "__main__":
     #     n_trials=3,
     # )
     # # obj.draw_ose(obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0))
-    # calc_list_lin = [{
-    #     "num_max": 1,
-    #     "sigma_1": 0.01},
-    #     {
-    #         "num_max": 1,
-    #         "sigma_1": 0.01
-    #     },
-    #     {
-    #         "num_max": 1,
-    #         "sigma_1": 0.1
-    #     },
-    #     {
-    #         "num_max": 1,
-    #         "sigma_1": 0.3
-    #     },
-    #     {
-    #         "num_max": 2,
-    #         "sigma_1": 0.01
-    #     },
-    #     {
-    #         "num_max": 2,
-    #         "sigma_1": 0.1
-    #     },
-    #     {
-    #         "num_max": 2,
-    #         "sigma_1": 0.3
-    #     },
-    # ]
-    # for calc in calc_list_lin:
-    #     obj = DrawProfiles(
-    #         dataset_name="dataset_3_csv",
-    #         dir_profiles_name="profiles_2",
-    #         n_trials=13,
-    #     )
-    #     obj.draw_linear_prog(
-    #         obj.make_all_necessary_calculations_for_linear_prog(
-    #             num_max=calc.get("num_max"), sigma_1=calc.get("sigma_1")
-    #         ),
-    #         folder_name=f"lin_num_max={calc.get('num_max')},sigma_1{calc.get('sigma_1')}"
-    #     )
+    calc_list_lin = [{
+        "num_max": 1,
+        "sigma_1": 0.01},
+        {
+            "num_max": 1,
+            "sigma_1": 0.01
+        },
+        {
+            "num_max": 1,
+            "sigma_1": 0.1
+        },
+        {
+            "num_max": 1,
+            "sigma_1": 0.3
+        },
+        {
+            "num_max": 2,
+            "sigma_1": 0.01
+        },
+        {
+            "num_max": 2,
+            "sigma_1": 0.1
+        },
+        {
+            "num_max": 2,
+            "sigma_1": 0.3
+        },
+    ]
+    for calc in calc_list_lin:
+        obj = DrawProfiles(
+            dataset_name="dataset_3_csv",
+            dir_profiles_name="profiles_2",
+            n_trials=13,
+        )
+        obj.draw_linear_prog(
+            obj.make_all_necessary_calculations_for_linear_prog(
+                num_max=calc.get("num_max"), sigma_1=calc.get("sigma_1")
+            ),
+            folder_name=f"lin_num_max={calc.get('num_max')},sigma_1{calc.get('sigma_1')}"
+        )
     calc_list_ose = [
         {
             "h_0": 50,
@@ -311,3 +318,91 @@ if __name__ == "__main__":
             ),
             folder_name=f"ose_h_0={calc.get('h_0')},sigma_1{calc.get('sigma_1')}"
         )
+    # for calc in calc_list_ose:
+    #     obj_1 = DrawProfiles(
+    #         dataset_name="dataset_2_csv",
+    #         dir_profiles_name="profiles_2",
+    #         n_trials=13,
+    #     )
+    #     obj_2 = Bayesian()
+    #     obj_1.draw_error(
+    #         obj_1.make_all_necessary_calculations_for_ose(
+    #             h_0=calc.get("h_0"), sigma_1=calc.get("sigma_1"),
+    #             sigma_2=calc.get("sigma_1")
+    #         ),
+    #
+    #         folder_name=f"error_ose_h_0={calc.get('h_0')},sigma_1{calc.get('sigma_1')}"
+    #     )
+    # n_trials = 13
+    # list_profiles_datasets = [
+        # {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_1"},
+        # {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_2"},
+        # {"dataset_name": "dataset_2_csv", "dir_profiles_name": "profiles_1"},
+    #     {"dataset_name": ["dataset_2_csv", "dataset_3_csv"], "dir_profiles_name": "profiles_2"},
+    # ]
+    # list_dictionary_of_calculations = [
+        # {
+        #     "sigma_1": 0,
+        #     "sigma_2": 0,
+        # },
+        # {
+        #     "sigma_1": 0.000001,
+        #     "sigma_2": 0.000001,
+        # },
+        # {
+        #     "sigma_1": 0.0001,
+        #     "sigma_2": 0.0001,
+        # },
+    #     {
+    #         "sigma_1": 0.01,
+    #         "sigma_2": 0.01,
+    #     },
+    #     {
+    #         "sigma_1": 0.1,
+    #         "sigma_2": 0.1,
+    #     },
+    #     {
+    #         "sigma_1": 0.3,
+    #         "sigma_2": 0.3,
+    #     },
+    #     {
+    #         "sigma_1": 0.1,
+    #         "num_max": 1,
+    #     },
+    #     {
+    #         "sigma_1": 0.1,
+    #         "num_max": 2,
+    #     },
+    #     {
+    #         "sigma_1": 0.3,
+    #         "num_max": 1,
+    #     },
+    #     {
+    #         "sigma_1": 0.3,
+    #         "num_max": 2,
+    #     },
+    #     {
+    #         "sigma_1": 0.01,
+    #         "num_max": 1,
+    #     },
+    #     {
+    #         "sigma_1": 0.01,
+    #         "num_max": 2,
+    #     },
+    # ]
+    # for p_d in list_profiles_datasets:
+    #     obj = DrawProfiles(
+    #         dataset_name=p_d["dataset_name"][0],
+    #         dir_profiles_name=p_d["dir_profiles_name"],
+    #         n_trials=n_trials,
+    #     )
+    #     out_results_1, out_results_2, folder_name = obj.calculate_pipeline_ose(pipeline=list_dictionary_of_calculations)
+    #     obj = DrawProfiles(
+    #         dataset_name=p_d["dataset_name"][1],
+    #         dir_profiles_name=p_d["dir_profiles_name"],
+    #         n_trials=n_trials,
+    #     )
+    #     out_results_3, out_results_4, folder_name = obj.calculate_pipeline_linprog(pipeline=list_dictionary_of_calculations)
+    #     obj.draw_ose_and_linprog(out_ose=[out_results_1, out_results_2],
+    #                              out_linprog=[out_results_3, out_results_4],
+    #                              folder_name=folder_name)

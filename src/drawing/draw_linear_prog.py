@@ -122,8 +122,8 @@ class DrawLinearProg(CommonDrawingMethods):
                     sigma_1,
                     num_max,
                     name_height,
-                    integral_mean,
-                    integral_std,
+                    integral_mean/50,
+                    integral_std/50,
                     integral_orig,
                 ]
             )

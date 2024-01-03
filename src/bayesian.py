@@ -28,7 +28,7 @@ class Bayesian(object):
         n: int,
     ) -> ndarray[Any, dtype[floating]]:
         """Сorrelation function calculation."""
-        print(h_0)
+        print(f"h_0={h_0}")
         return np.array(
             [
                 [
@@ -53,7 +53,7 @@ class Bayesian(object):
         n: int,
         sigma_2: float,
         factor: float,
-        h_0: int = 50,
+        h_0,
     ) -> tuple[
         ndarray[Any, dtype[floating]],
         tuple[Union[ndarray[Any, dtype[floating]], Any]],
@@ -139,7 +139,6 @@ class Bayesian(object):
         data: tuple[
             Union[tuple, tuple[Union[float, Any], ...]], list[tuple]
         ] = prof_recovery.make_data(n=n)
-        print(np.array(data[0]))
         return (
             np.array(
                 [x[1] for x in dir_meas.direct_measurements_for_profile()]

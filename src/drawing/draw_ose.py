@@ -53,7 +53,7 @@ class DrawOSE(CommonDrawingMethods):
             integral_orig: float = out_results[key][11]
             plt.bar(
                 x=[x_i + 25 for x_i in h],
-                height=[h_i for h_i in out[0]],
+                height=[h_i/50 for h_i in out[0]],
                 width=45,
                 linewidth=1,
                 edgecolor="black",
@@ -64,7 +64,7 @@ class DrawOSE(CommonDrawingMethods):
             )
             plt.bar(
                 x=[x_i + 25 for x_i in data_bars[0]],
-                height=[h_i * 50 for h_i in data_bars[1]],
+                height=[h_i for h_i in data_bars[1]],
                 width=45,
                 linewidth=1,
                 edgecolor="black",
@@ -75,7 +75,7 @@ class DrawOSE(CommonDrawingMethods):
             )
             plt.errorbar(
                 x=[x_i + 25 for x_i in h],
-                y=[y_i for y_i in out_avg],
+                y=[y_i/50 for y_i in out_avg],
                 yerr=[yerr_i for yerr_i in out_er],
                 fmt="o",
                 ecolor="black",
@@ -85,7 +85,7 @@ class DrawOSE(CommonDrawingMethods):
                 label=f"ose:average restored n={self.n_trials}",
             )
             plt.axhline(
-                y=50 * factor,
+                y= factor,
                 color="black",
                 linewidth=2,
                 label="priori profile",
