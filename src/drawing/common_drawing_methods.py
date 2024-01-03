@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from src.direct_measurements import DirectMeasurements
 
 
-
 @dataclass
 class CommonDrawingMethods(object):
     """Class with common drawing methods for restoring profiles."""

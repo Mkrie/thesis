@@ -9,23 +9,6 @@ from numpy import ndarray, dtype, floating
 from src.drawing.draw_linear_prog import DrawLinearProg
 from src.drawing.draw_ose import DrawOSE
 
-dict_profile_time = {
-    ("06", "42"): "PM004A",
-    ("07", "05"): "PM004D",
-    ("07", "37"): "PM005A",
-    ("08", "08"): "PM005D",
-    ("09", "42"): "PM006A",
-    ("10", "13"): "PM006D",
-    ("11", "01"): "PM007A",
-    ("11", "27"): "PM007D",
-    ("13", "06"): "PM008A",
-    ("13", "23"): "PM008D",
-    ("16", "54"): "PM010A",
-    ("17", "17"): "PM010D",
-    ("17", "46"): "PM011A",
-    ("18", "04"): "PM011D",
-}
-
 
 @dataclass
 class DrawProfiles(DrawOSE, DrawLinearProg):
@@ -35,7 +18,11 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
     dir_profiles_name: str = "profiles_2"
     n_trials: int = 10
 
-    def draw_ose_and_linprog(self, out_ose, out_linprog, folder_name: str) -> None:
+    def draw_ose_and_linprog(
+        self, out_ose, out_linprog, folder_name: str
+    ) -> None:
+        print(out_ose)
+        print(out_linprog)
         """Draw the profile reconstructed using OSE and LP."""
         path_out: Path = Path(Path.cwd().parent, "output", folder_name)
         path_out.mkdir(parents=True, exist_ok=True)
@@ -47,7 +34,7 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
         plt.figure(figsize=(15, 12))
         for key in out_ose[0].keys():
             for k in range(2):
-                plt.subplot(2, 2, k+1)
+                plt.subplot(2, 2, k + 1)
                 h: ndarray[Any, dtype[floating]] = out_ose[k][key][0]
                 out: tuple[
                     Union[ndarray[Any, dtype[floating]], Any]
@@ -55,7 +42,6 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
                 data_bars: tuple[list[float], list[float]] = out_ose[k][key][2]
                 out_avg: ndarray[Any, dtype[floating]] = out_ose[k][key][3]
                 out_er: ndarray[Any, dtype[floating]] = out_ose[k][key][4]
-                sigma_1: float = out_ose[k][key][5]
                 txt_path: Path = out_ose[k][key][6]
                 name_height: dict[str, str] = out_ose[k][key][7]
                 factor: float = out_ose[k][key][8]
@@ -95,10 +81,12 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
                     color="black",
                     label=f"ose:average restored n={self.n_trials}",
                 )
-                plt.axhline(y=50 * factor,
-                            color='black',
-                            linewidth=2,
-                            label="priori profile")
+                plt.axhline(
+                    y=50 * factor,
+                    color="black",
+                    linewidth=2,
+                    label="priori profile",
+                )
                 self.general_chart_settings(
                     info=[integral_mean, integral_std, integral_orig],
                     name_height=name_height,
@@ -106,14 +94,15 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
                 print(f"ose:{txt_path.name}, {datetime.now()}")
             for k in range(2):
                 plt.subplot(2, 2, k + 3)
-                txt_path: Path = out_linprog[k][key][0]
                 h: ndarray[Any, dtype[floating]] = out_linprog[k][key][1]
                 out: tuple[
                     Union[ndarray[Any, dtype[floating]], Any]
                 ] = out_linprog[k][key][2]
                 out_avg: ndarray[Any, dtype[floating]] = out_linprog[k][key][3]
                 out_er: ndarray[Any, dtype[floating]] = out_linprog[k][key][4]
-                data_bars: tuple[list[float], list[float]] = out_linprog[k][key][5]
+                data_bars: tuple[list[float], list[float]] = out_linprog[k][
+                    key
+                ][5]
                 sigma_1: float = out_linprog[k][key][6]
                 num_max: int = out_linprog[k][key][7]
                 name_height: dict[str, str] = out_linprog[k][key][8]
@@ -151,7 +140,7 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
                     elinewidth=2.5,
                     capsize=4,
                     color="black",
-                    label=f"linear prog:average restored n={self.n_trials}",
+                    label=f"linear prog:average restored n={self.n_trials}, n_max={num_max}",
                 )
                 self.general_chart_settings(
                     info=[integral_mean, integral_std, integral_orig],
@@ -162,7 +151,7 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
             )
             plt.figure(figsize=(15, 12))
 
-    def calculate_pipeline(self, pipeline) -> None:
+    def calculate_pipeline(self, pipeline: int) -> None:
         for calc in pipeline:
             if (
                 "sigma_2" in calc.keys()
@@ -189,92 +178,136 @@ class DrawProfiles(DrawOSE, DrawLinearProg):
                     folder_name=folder_name,
                 )
 
-
-
     def calculate_pipeline_ose(self, pipeline):
         for calc in pipeline:
-            folder_name: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
-            out_results_1 = self.make_all_necessary_calculations_for_ose(sigma_1=calc.get("sigma_1"),
-                                                                         sigma_2=calc.get("sigma_2"),
-                                                                         h_0=50)
-            out_results_2 = self.make_all_necessary_calculations_for_ose(sigma_1=calc.get("sigma_1"),
-                                                                         sigma_2=calc.get("sigma_2"),
-                                                                         h_0=200)
-        return out_results_1, out_results_2, folder_name
+            folder_name_ose: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
+            out_results_ose_1 = self.make_all_necessary_calculations_for_ose(
+                sigma_1=calc.get("sigma_1"),
+                sigma_2=calc.get("sigma_2"),
+                h_0=50,
+            )
+            out_results_ose_2 = self.make_all_necessary_calculations_for_ose(
+                sigma_1=calc.get("sigma_1"),
+                sigma_2=calc.get("sigma_2"),
+                h_0=200,
+            )
+        return out_results_ose_1, out_results_ose_2, folder_name_ose
 
     def calculate_pipeline_linprog(self, pipeline):
         for calc in pipeline:
-            folder_name: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
-            out_results_3 = self.make_all_necessary_calculations_for_linear_prog(num_max=1,
-                                                                                 sigma_1=calc.get("sigma_1"))
-            out_results_4 = self.make_all_necessary_calculations_for_linear_prog(num_max=2,
-                                                                                 sigma_1=calc.get("sigma_1"))
-        return out_results_3, out_results_4, folder_name
+            folder_name_linprog: str = f"{self.dir_profiles_name},sigma_1={calc.get('sigma_1')},sigma_2={calc.get('sigma_2')}"
+            out_results_linprog_3 = (
+                self.make_all_necessary_calculations_for_linear_prog(
+                    num_max=1, sigma_1=calc.get("sigma_1")
+                )
+            )
+            out_results_linprog_4 = (
+                self.make_all_necessary_calculations_for_linear_prog(
+                    num_max=2, sigma_1=calc.get("sigma_1")
+                )
+            )
+        return (
+            out_results_linprog_3,
+            out_results_linprog_4,
+            folder_name_linprog,
+        )
 
 
 if __name__ == "__main__":
-    n_trials = 13
-    list_profiles_datasets = [
-        # {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_1"},
-        # {"dataset_name": "dataset_3_csv", "dir_profiles_name": "profiles_2"},
-        # {"dataset_name": "dataset_2_csv", "dir_profiles_name": "profiles_1"},
-        {"dataset_name": ["dataset_2_csv", "dataset_3_csv"], "dir_profiles_name": "profiles_2"},
-    ]
-    list_dictionary_of_calculations = [
-        # {
-        #     "sigma_1": 0,
-        #     "sigma_2": 0,
-        # },
-        # {
-        #     "sigma_1": 0.000001,
-        #     "sigma_2": 0.000001,
-        # },
-        # {
-        #     "sigma_1": 0.0001,
-        #     "sigma_2": 0.0001,
-        # },
-        # {
-        #     "sigma_1": 0.01,
-        #     "sigma_2": 0.01,
-        # },
-        # {
-        #     "sigma_1": 0.1,
-        #     "sigma_2": 0.1,
-        # },
+    # n_trials: int = 2
+    # list_profiles_datasets = [
+    #     {
+    #         "dataset_name": ["dataset_2_csv", "dataset_3_csv"],
+    #         "dir_profiles_name": "profiles_2",
+    #     },
+    # ]
+    # list_dictionary_of_calculations = [
+    #     {
+    #         "sigma_1": 0.01,
+    #         "sigma_2": 0.01,
+    #     },
+    # ]
+    # obj = DrawProfiles(
+    #     dataset_name="dataset_3_csv",
+    #     dir_profiles_name="profiles_2",
+    #     n_trials=3,
+    # )
+    # # obj.draw_ose(obj.make_all_necessary_calculations_for_ose(sigma_1=0, sigma_2=0))
+    # calc_list_lin = [{
+    #     "num_max": 1,
+    #     "sigma_1": 0.01},
+    #     {
+    #         "num_max": 1,
+    #         "sigma_1": 0.01
+    #     },
+    #     {
+    #         "num_max": 1,
+    #         "sigma_1": 0.1
+    #     },
+    #     {
+    #         "num_max": 1,
+    #         "sigma_1": 0.3
+    #     },
+    #     {
+    #         "num_max": 2,
+    #         "sigma_1": 0.01
+    #     },
+    #     {
+    #         "num_max": 2,
+    #         "sigma_1": 0.1
+    #     },
+    #     {
+    #         "num_max": 2,
+    #         "sigma_1": 0.3
+    #     },
+    # ]
+    # for calc in calc_list_lin:
+    #     obj = DrawProfiles(
+    #         dataset_name="dataset_3_csv",
+    #         dir_profiles_name="profiles_2",
+    #         n_trials=13,
+    #     )
+    #     obj.draw_linear_prog(
+    #         obj.make_all_necessary_calculations_for_linear_prog(
+    #             num_max=calc.get("num_max"), sigma_1=calc.get("sigma_1")
+    #         ),
+    #         folder_name=f"lin_num_max={calc.get('num_max')},sigma_1{calc.get('sigma_1')}"
+    #     )
+    calc_list_ose = [
         {
-            "sigma_1": 0,
-            "sigma_2": 0,
-        }
-        # {
-        #     "sigma_1": 0.1,
-        #     "num_max": 1,
-        # },
-        # {
-        #     "sigma_1": 0.3,
-        #     "num_max": 1,
-        # },
-        # {
-        #     "sigma_1": 0.1,
-        #     "num_max": 2,
-        # },
-        # {
-        #     "sigma_1": 0.3,
-        #     "num_max": 2,
-        # },
-    ]
-    for p_d in list_profiles_datasets:
+            "h_0": 50,
+            "sigma_1": 0.01
+        },
+        {
+            "h_0": 50,
+            "sigma_1": 0.1
+        },
+        {
+            "h_0": 50,
+            "sigma_1": 0.3
+        },
+        {
+            "h_0": 200,
+            "sigma_1": 0.01
+        },
+        {
+            "h_0": 200,
+            "sigma_1": 0.1
+        },
+        {
+            "h_0": 200,
+            "sigma_1": 0.3
+        }]
+    for calc in calc_list_ose:
         obj = DrawProfiles(
-            dataset_name=p_d["dataset_name"][0],
-            dir_profiles_name=p_d["dir_profiles_name"],
-            n_trials=n_trials,
+            dataset_name="dataset_2_csv",
+            dir_profiles_name="profiles_2",
+            n_trials=13,
         )
-        out_results_1, out_results_2, folder_name = obj.calculate_pipeline_ose(pipeline=list_dictionary_of_calculations)
-        obj = DrawProfiles(
-            dataset_name=p_d["dataset_name"][1],
-            dir_profiles_name=p_d["dir_profiles_name"],
-            n_trials=n_trials,
+        obj.draw_ose(
+            obj.make_all_necessary_calculations_for_ose(
+                h_0=calc.get("h_0"), sigma_1=calc.get("sigma_1"),
+                sigma_2=calc.get("sigma_1")
+            ),
+            folder_name=f"ose_h_0={calc.get('h_0')},sigma_1{calc.get('sigma_1')}"
         )
-        out_results_3, out_results_4, folder_name = obj.calculate_pipeline_linprog(pipeline=list_dictionary_of_calculations)
-        obj.draw_ose_and_linprog(out_ose=[out_results_1, out_results_2],
-                                 out_linprog=[out_results_3, out_results_4],
-                                 folder_name=folder_name)

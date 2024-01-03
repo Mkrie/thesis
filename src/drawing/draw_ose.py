@@ -13,8 +13,6 @@ from src.bayesian import Bayesian
 from src.drawing.common_drawing_methods import CommonDrawingMethods
 
 
-
-
 @dataclass
 class DrawOSE(CommonDrawingMethods):
     """Class for plotting graphs after OSE restoring profiles."""
@@ -86,10 +84,12 @@ class DrawOSE(CommonDrawingMethods):
                 color="black",
                 label=f"ose:average restored n={self.n_trials}",
             )
-            plt.axhline(y=50 * factor,
-                        color='black',
-                        linewidth=2,
-                        label="priori profile")
+            plt.axhline(
+                y=50 * factor,
+                color="black",
+                linewidth=2,
+                label="priori profile",
+            )
             # plt.bar(
             #     x=[x_i + 25 for x_i in h],
             #     height=len(h) * [factor * 50],
@@ -114,7 +114,12 @@ class DrawOSE(CommonDrawingMethods):
         # plt.show()
 
     def calculate_average_and_error_ose(
-        self, sigma_1: float, sigma_2: float, h_0: int, factor: float, txt_path: Path
+        self,
+        sigma_1: float,
+        sigma_2: float,
+        h_0: int,
+        factor: float,
+        txt_path: Path,
     ) -> tuple[
         ndarray[Any, dtype[floating]],
         tuple[Union[ndarray[Any, dtype[floating]], Any]],
@@ -130,15 +135,15 @@ class DrawOSE(CommonDrawingMethods):
                 dataset_name="dataset_2_csv",
             )
             h, out = b.assessment(
-                sigma_1=sigma_1,
-                n=21,
-                sigma_2=sigma_2,
-                factor=factor,
-                h_0=h_0
+                sigma_1=sigma_1, n=21, sigma_2=sigma_2, factor=factor, h_0=h_0
             )
             out_sum.append(tuple(out[0]))
             # for const
             integrals: float = 50 * np.array(out_sum).sum(axis=1)
+        theoretical_error = b.calculate_theoretical_error(sigma_1=sigma_1,
+                                                          n=21,
+                                                          sigma_2=sigma_2,
+                                                          factor=10**13)
         # print(*out_sum, sep='\n')
         # sys.exit()
         return (
@@ -164,10 +169,12 @@ class DrawOSE(CommonDrawingMethods):
             name_height: dict[str, str] = json.load(json_file_1)
         out_results = dict()
         for txt_path in path_to_profile_csv.glob("*"):
-            needed_profiles = ["threemod_1.csv",
-                               "threemod_1_1.csv",
-                               "threemod_2.csv",
-                               "threemod_2_1.csv"]
+            needed_profiles = [
+                "threemod_1.csv",
+                "threemod_1_1.csv",
+                "threemod_2.csv",
+                "threemod_2_1.csv",
+            ]
             if txt_path.name not in needed_profiles:
                 continue
             data_bars = self.get_data_for_original_profile(
@@ -205,6 +212,8 @@ class DrawOSE(CommonDrawingMethods):
                     integral_mean,
                     integral_std,
                     integral_orig,
+                    h_0,
+                    sigma_2
                 ]
             )
             # break
